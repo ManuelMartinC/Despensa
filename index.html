@@ -196,7 +196,7 @@ body{padding-top:env(safe-area-inset-top,0px)}
 .frame::after{content:"";position:absolute;left:8%;right:8%;top:50%;height:2px;background:#e2a64a;box-shadow:0 0 12px #e2a64a}
 .frame.hit{border-color:#86c58e}
 .hint{position:absolute;left:0;right:0;top:calc(45% + min(20vw,105px) + 18px);text-align:center;font-size:.95rem;padding:0 16px;text-shadow:0 1px 4px #000}
-.camerr{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center}
+.camerr{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#000;z-index:2}
 .scanner footer{background:#111;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:grid;gap:10px}
 .log{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:30vh;overflow-y:auto}
 .log li{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;font-size:.92rem}
@@ -300,7 +300,7 @@ body{padding-top:env(safe-area-inset-top,0px)}
     <button class="close" id="closeScan" type="button">Hecho</button>
   </header>
   <div class="stage">
-    <video id="video" playsinline muted></video>
+    <video id="video" playsinline muted autoplay></video>
     <div class="frame" id="frame"></div>
     <div class="hint" id="hint">Apunta al código de barras. Se guarda solo.</div>
     <div class="camerr" id="camErr" hidden></div>
@@ -311,7 +311,7 @@ body{padding-top:env(safe-area-inset-top,0px)}
       <input id="codeInput" inputmode="numeric" autocomplete="off" placeholder="o escribe el código" aria-label="Código de barras">
       <button class="btn" type="submit">OK</button>
     </form>
-    <div class="alt"><span class="pick">Leer de una foto<input id="photoInput" type="file" accept="image/*" aria-label="Leer código de una foto"></span><button type="button" class="iconbtn" id="torchBtn" hidden style="color:#bbb">Linterna</button></div>
+    <div class="alt"><span class="pick">Hacer foto al código<input id="photoInput" type="file" accept="image/*" capture="environment" aria-label="Leer código de una foto"></span><button type="button" class="iconbtn" id="torchBtn" hidden style="color:#bbb">Linterna</button></div>
   </footer>
 </div>
 
@@ -548,21 +548,56 @@ let stream=null,running=false,paused=false,lastCode="",lastAt=0,audio=null,detec
 function setMode(m){state.mode=m;$("#modeIn").setAttribute("aria-pressed",m==="in");$("#modeOut").setAttribute("aria-pressed",m==="out")}
 $("#modeIn").onclick=()=>setMode("in");$("#modeOut").onclick=()=>setMode("out");
 $("#openScan").onclick=openScanner;$("#closeScan").onclick=closeScanner;
-async function openScanner(){
-  $("#scanner").hidden=false;$("#log").innerHTML="";$("#camErr").hidden=true;paused=false;
-  try{audio=audio||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}
-  if("BarcodeDetector" in window&&!detector){try{const f=await BarcodeDetector.getSupportedFormats();const want=["ean_13","ean_8","upc_a","upc_e","code_128","code_39","itf"].filter(x=>f.includes(x));if(want.length)detector=new BarcodeDetector({formats:want})}catch(e){}}
+function camMsg(html){const c=$("#camErr");c.hidden=!html;c.innerHTML=html||""}
+function camFallbackHtml(msg){
+  return `<div style="display:grid;gap:14px;max-width:340px">
+    <p style="margin:0">${msg}</p>
+    <button type="button" class="btn primary" id="camRetry" style="justify-content:center">Activar cámara</button>
+    <span class="btn" style="position:relative;overflow:hidden;justify-content:center;background:#e7ece4;color:#111;border:0">📷 Hacer foto al código<input type="file" accept="image/*" capture="environment" id="camShot" style="position:absolute;inset:0;opacity:0;width:100%;height:100%"></span>
+  </div>`;
+}
+function wireFallback(){
+  const r=$("#camRetry");if(r)r.onclick=()=>startCamera();
+  const f=$("#camShot");if(f)f.addEventListener("change",e=>readPhoto(e.target));
+}
+const inApp=/FBAN|FBAV|Instagram|Line\/|WhatsApp|GSA\/|; wv\)|Gmail/i.test(navigator.userAgent);
+function openScanner(){
+  $("#scanner").hidden=false;$("#log").innerHTML="";camMsg("");paused=false;
+  try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();if(audio.state==="suspended")audio.resume()}catch(e){}
+  startCamera();
+  if("BarcodeDetector" in window&&!detector){BarcodeDetector.getSupportedFormats().then(f=>{const want=["ean_13","ean_8","upc_a","upc_e","code_128","code_39","itf"].filter(x=>f.includes(x));if(want.length&&!detector)detector=new BarcodeDetector({formats:want})}).catch(()=>{})}
+}
+async function startCamera(){
+  camMsg("");
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+  if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    camMsg(camFallbackHtml(inApp?"Estás dentro del navegador de otra app (Gmail, WhatsApp…) y no deja usar la cámara. Abre la web en Chrome o Safari, o usa la foto:":"Este navegador no deja usar la cámara en directo. Usa la foto:"));wireFallback();return;
+  }
+  const v=$("#video");v.muted=true;v.setAttribute("muted","");v.setAttribute("playsinline","");v.setAttribute("autoplay","");
+  const timer=setTimeout(()=>{if(!running){camMsg(camFallbackHtml("La cámara no arranca. Si el móvil te ha preguntado por el permiso, pulsa <b>Permitir</b>. Si no, toca el botón:"));wireFallback()}},6000);
   try{
-    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}},audio:false});
-    const v=$("#video");v.srcObject=stream;await v.play();track=stream.getVideoTracks()[0];
-    try{const caps=track.getCapabilities&&track.getCapabilities();$("#torchBtn").hidden=!(caps&&caps.torch);if(caps&&caps.focusMode&&caps.focusMode.includes("continuous"))track.applyConstraints({advanced:[{focusMode:"continuous"}]}).catch(()=>{})}catch(e){}
-    running=true;loop();
+    try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false})}
+    catch(e){if(e&&(e.name==="NotAllowedError"||e.name==="SecurityError"))throw e;stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false})}
+    v.srcObject=stream;
+    try{await v.play()}catch(e){clearTimeout(timer);camMsg(camFallbackHtml("Toca para encender la cámara:"));wireFallback();
+      $("#camRetry").onclick=()=>{v.play().then(()=>{camMsg("");begin()}).catch(()=>startCamera())};return}
+    clearTimeout(timer);camMsg("");begin();
   }catch(e){
-    const c=$("#camErr");c.hidden=false;
-    c.textContent=e&&e.name==="NotAllowedError"?"No hay permiso para usar la cámara. Actívalo en los ajustes del navegador para esta web, o escribe el código abajo.":"No se ha podido abrir la cámara. Escribe el código abajo o léelo de una foto.";
+    clearTimeout(timer);
+    const denied=e&&(e.name==="NotAllowedError"||e.name==="SecurityError");
+    const msg=denied?"El permiso de la cámara está bloqueado para esta web. Toca el candado ⓘ junto a la dirección → <b>Permisos → Cámara → Permitir</b> y recarga. Mientras, usa la foto:":
+      e&&e.name==="NotFoundError"?"No encuentro ninguna cámara. Usa la foto o escribe el código:":
+      e&&e.name==="NotReadableError"?"Otra app está usando la cámara. Ciérrala y toca el botón, o usa la foto:":
+      "No se ha podido abrir la cámara ("+esc(e&&e.name||"error")+"). Usa la foto:";
+    camMsg(camFallbackHtml(msg));wireFallback();
   }
 }
-function closeScanner(){running=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$("#scanner").hidden=true}
+function begin(){
+  track=stream.getVideoTracks()[0];
+  try{const caps=track.getCapabilities&&track.getCapabilities();$("#torchBtn").hidden=!(caps&&caps.torch);if(caps&&caps.focusMode&&caps.focusMode.includes("continuous"))track.applyConstraints({advanced:[{focusMode:"continuous"}]}).catch(()=>{})}catch(e){}
+  if(!running){running=true;loop()}
+}
+function closeScanner(){running=false;camMsg("");if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$("#scanner").hidden=true}
 let torchOn=false;
 $("#torchBtn").onclick=()=>{if(!track)return;torchOn=!torchOn;track.applyConstraints({advanced:[{torch:torchOn}]}).catch(()=>{})};
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&running)closeScanner()});
@@ -608,16 +643,17 @@ async function onDetected(code){
   }
 }
 $("#codeForm").addEventListener("submit",e=>{e.preventDefault();const c=cleanCode($("#codeInput").value);$("#codeInput").value="";if(c){lastCode=c;lastAt=Date.now();onDetected(c)}});
-$("#photoInput").addEventListener("change",async e=>{
-  const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;
+function readPhoto(input){
+  const f=input.files&&input.files[0];input.value="";if(!f)return;
   const url=URL.createObjectURL(f);const img=new Image();
   img.onload=async()=>{let code=null;
     try{if(detector){const r=await detector.detect(img);if(r&&r.length)code=r[0].rawValue}}catch(x){}
     if(!code&&window.ZXing){for(const max of [1400,900,2000]){const sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));work.width=Math.round(img.naturalWidth*sc);work.height=Math.round(img.naturalHeight*sc);work.getContext("2d",{willReadFrequently:true}).drawImage(img,0,0,work.width,work.height);code=zx(work);if(code)break}}
     URL.revokeObjectURL(url);
-    if(code)onDetected(cleanCode(code));else{beep(false);logLine("out","?","No se ve ningún código en la foto")}
+    if(code)onDetected(cleanCode(code));else{beep(false);logLine("out","?","No se ve ningún código en la foto. Acércate más y con luz.")}
   };img.src=url;
-});
+}
+$("#photoInput").addEventListener("change",e=>readPhoto(e.target));
 let zxReader=null;
 function zx(canvas){
   try{const Z=window.ZXing;
