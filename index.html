@@ -210,6 +210,64 @@ body{padding-top:env(safe-area-inset-top,0px)}
 .scanner footer .alt{display:flex;justify-content:center;gap:16px;font-size:.85rem;color:#bbb}
 .scanner footer .alt .pick{position:relative;overflow:hidden;text-decoration:underline}
 .scanner footer .alt .pick input{position:absolute;inset:0;opacity:0;width:100%;height:100%}
+
+/* ---- v2: caducidades, packs y fotos ---- */
+.ledger{grid-template-columns:repeat(4,minmax(0,1fr))}
+.ledger b{font-size:1.35rem}
+.ledger .exp b{color:var(--red)}
+.thumb.own{object-fit:cover}
+.pill.soon{background:var(--mustard-bg);color:var(--mustard)}
+.pill.later{background:var(--surface-2);color:var(--muted)}
+.expcard{margin-top:16px;border:1px solid var(--line);border-left:4px solid var(--red);border-radius:12px;background:var(--surface);padding:12px 14px}
+.expcard h2{font-size:1.05rem;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.expcard h2 span{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);font-weight:500}
+.explist{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.explist li{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:.92rem}
+.explist li button{background:none;border:0;padding:0;text-align:left;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.explist .when{font-family:var(--f-mono);font-size:.8rem;white-space:nowrap}
+.when.past,.when.d0,.when.d1{color:var(--red)}
+.when.d2,.when.d3,.when.d7{color:var(--mustard)}
+
+/* Foto en la ficha */
+.photo{display:flex;gap:14px;align-items:center}
+.photo .big{width:84px;height:84px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);display:grid;place-items:center;overflow:hidden;flex:0 0 auto;color:var(--muted);font-size:.75rem;text-align:center}
+.photo .big img{width:100%;height:100%;object-fit:cover}
+.photo .acts{display:grid;gap:6px}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+
+/* Lotes (unidades + caducidad) */
+.lots{display:grid;gap:8px}
+.lots .lh{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);font-weight:600}
+.lot{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center}
+.lot input[type=date]{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:.95rem;width:100%;min-width:0;color:var(--ink)}
+.lot .stepper button{width:36px;height:38px}
+.lot .rm{background:none;border:0;color:var(--red);font-size:1.1rem;padding:6px}
+.addlot{justify-self:start;background:none;border:0;color:var(--olive);font-weight:700;padding:4px 0}
+
+/* Tarjeta rápida del escáner */
+.quick{display:grid;gap:10px}
+.qhead{display:flex;gap:12px;align-items:center}
+.qhead .qimg{width:56px;height:56px;border-radius:10px;background:#fff;overflow:hidden;display:grid;place-items:center;color:#111;font-weight:800;font-family:var(--f-display);font-size:1.4rem;flex:0 0 auto}
+.qhead .qimg img{width:100%;height:100%;object-fit:contain}
+.qhead .qimg img.own{object-fit:cover}
+.qhead b{display:block;font-size:1.05rem;overflow-wrap:anywhere}
+.qhead small{color:#bbb}
+.qlabel{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:#999;font-weight:700}
+.qchips{display:flex;gap:6px;flex-wrap:wrap}
+.qchips button{border:1px solid #444;background:transparent;color:#ddd;border-radius:999px;padding:7px 12px;font-size:.88rem}
+.qchips button[aria-pressed="true"]{background:#e7ece4;color:#111;border-color:#e7ece4}
+.qqty{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.qqty .stepper{background:#222;border-color:#333}
+.qqty .stepper button{color:#fff}
+.qqty output{color:#fff}
+.qdate{background:#222;border:1px solid #333;color:#fff;border-radius:10px;padding:8px 10px;font-size:.95rem}
+.qact{display:grid;grid-template-columns:1fr 2fr;gap:8px}
+.qact .btn{justify-content:center;padding:13px}
+.qact .ok{background:#8fb862;color:#111;border:0;font-weight:800}
+.qact .no{background:transparent;color:#ddd;border-color:#444}
+.asktoggle{display:flex;gap:8px;align-items:center;justify-content:center;font-size:.85rem;color:#bbb}
+.asktoggle input{width:18px;height:18px;accent-color:#8fb862}
 </style>
 </head>
 <body>
@@ -234,11 +292,16 @@ body{padding-top:env(safe-area-inset-top,0px)}
   <div class="ledger" aria-label="Resumen">
     <div><b id="stProd">0</b><span>Productos</span></div>
     <div><b id="stUnits">0</b><span>Unidades</span></div>
-    <div class="warn"><b id="stMiss">0</b><span>Por comprar</span></div>
+    <div class="exp"><b id="stExp">0</b><span>Caducan</span></div>
+    <div class="warn"><b id="stMiss">0</b><span>Comprar</span></div>
   </div>
 
   <section class="view" id="view-despensa">
-    <div class="toolbar">
+    <div class="expcard" id="expCard" hidden>
+      <h2>Caduca pronto <span>próximos 7 días</span></h2>
+      <ul class="explist" id="expList"></ul>
+    </div>
+    <div class="toolbar" style="margin-top:16px">
       <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="q" type="search" placeholder="Buscar producto o código" autocomplete="off"></label>
       <button class="btn" id="addManual" type="button">+ Sin código</button>
@@ -251,7 +314,7 @@ body{padding-top:env(safe-area-inset-top,0px)}
   <section class="view" id="view-falta" hidden>
     <div class="listhead">
       <h2>Lista de la compra</h2>
-      <button class="btn" id="copyList" type="button">Copiar lista</button>
+      <button class="btn" id="copyList" type="button">Compartir lista</button>
     </div>
     <p class="note">Aparece todo lo que está por debajo de su stock mínimo. Cambia el mínimo tocando el producto.</p>
     <ul class="items" id="missList"></ul>
@@ -270,6 +333,7 @@ body{padding-top:env(safe-area-inset-top,0px)}
         <label class="f">Tiempo máximo<select id="rTime"><option value="15">15 min</option><option value="30" selected>30 min</option><option value="60">1 hora</option><option value="0">Sin límite</option></select></label>
       </div>
       <label class="check"><input type="checkbox" id="rStrict" checked> Solo con lo que tengo (sal, aceite y especias básicas aparte)</label>
+      <label class="check"><input type="checkbox" id="rExpire" checked> Gastar primero lo que caduca antes</label>
       <button class="btn primary" type="submit" style="justify-content:center">Pedir recetas a Claude ↗</button>
       <p class="note">Se abre Claude con tu despensa ya escrita en el mensaje. Si no se rellena solo, pega el texto: se copia al pulsar.</p>
     </form>
@@ -303,16 +367,39 @@ body{padding-top:env(safe-area-inset-top,0px)}
   <div class="stage">
     <video id="video" playsinline muted autoplay></video>
     <div class="frame" id="frame"></div>
-    <div class="hint" id="hint">Apunta al código de barras. Se guarda solo.</div>
+    <div class="hint" id="hint">Apunta al código de barras.</div>
     <div class="camerr" id="camErr" hidden></div>
   </div>
   <footer>
-    <ul class="log" id="log"></ul>
-    <form class="codeline" id="codeForm">
-      <input id="codeInput" inputmode="numeric" autocomplete="off" placeholder="o escribe el código" aria-label="Código de barras">
-      <button class="btn" type="submit">OK</button>
-    </form>
-    <div class="alt"><span class="pick">Hacer foto al código<input id="photoInput" type="file" accept="image/*" capture="environment" aria-label="Leer código de una foto"></span><button type="button" class="iconbtn" id="torchBtn" hidden style="color:#bbb">Linterna</button></div>
+    <div class="quick" id="quick" hidden>
+      <div class="qhead"><div class="qimg" id="qImg"></div><div style="min-width:0"><b id="qName"></b><small id="qSub"></small></div></div>
+      <div class="qlabel">Unidades</div>
+      <div class="qqty">
+        <div class="stepper"><button type="button" id="qMinus" aria-label="Una menos">−</button><output class="mono" id="qN">1</output><button type="button" id="qPlus" aria-label="Una más">+</button></div>
+        <div class="qchips" id="qPacks"><button type="button" data-n="1" aria-pressed="true">×1</button><button type="button" data-n="2">×2</button><button type="button" data-n="4">×4</button><button type="button" data-n="6">×6</button><button type="button" data-n="12">×12</button></div>
+      </div>
+      <div class="qlabel">Caduca</div>
+      <div class="qchips" id="qDates">
+        <button type="button" data-d="" aria-pressed="true">Sin fecha</button>
+        <button type="button" data-d="3">3 días</button>
+        <button type="button" data-d="7">1 semana</button>
+        <button type="button" data-d="14">2 semanas</button>
+        <button type="button" data-d="30">1 mes</button>
+        <button type="button" data-d="90">3 meses</button>
+        <button type="button" data-d="365">1 año</button>
+      </div>
+      <input type="date" class="qdate" id="qDate" aria-label="Fecha de caducidad exacta">
+      <div class="qact"><button type="button" class="btn no" id="qCancel">Cancelar</button><button type="button" class="btn ok" id="qOk">Añadir 1</button></div>
+    </div>
+    <div id="scanFoot">
+      <ul class="log" id="log"></ul>
+      <form class="codeline" id="codeForm" style="margin-top:10px">
+        <input id="codeInput" inputmode="numeric" autocomplete="off" placeholder="o escribe el código" aria-label="Código de barras">
+        <button class="btn" type="submit">OK</button>
+      </form>
+      <div class="alt" style="margin-top:10px"><span class="pick">Hacer foto al código<input id="photoInput" type="file" accept="image/*" capture="environment" aria-label="Leer código de una foto"></span><button type="button" class="iconbtn" id="torchBtn" hidden style="color:#bbb">Linterna</button></div>
+      <label class="asktoggle" style="margin-top:8px"><input type="checkbox" id="askToggle" checked> Preguntar unidades y caducidad al meter</label>
+    </div>
   </footer>
 </div>
 
@@ -324,18 +411,30 @@ body{padding-top:env(safe-area-inset-top,0px)}
     <h2 id="prodTitle">Producto nuevo</h2>
     <p class="note" id="prodHint" hidden></p>
     <form class="form" id="prodForm">
+      <div class="photo">
+        <div class="big" id="pPhoto">Sin foto</div>
+        <div class="acts">
+          <span class="btn filebtn">📷 Hacer foto<input type="file" accept="image/*" capture="environment" id="pPhotoCam" aria-label="Hacer foto del producto"></span>
+          <span class="btn filebtn" style="font-weight:500">Elegir de la galería<input type="file" accept="image/*" id="pPhotoGal" aria-label="Elegir foto de la galería"></span>
+          <button type="button" class="iconbtn" id="pPhotoRm" hidden style="justify-self:start">Quitar foto</button>
+        </div>
+      </div>
       <label class="f">Nombre<input id="pName" required autocomplete="off" placeholder="Garbanzos cocidos"></label>
       <div class="row2">
         <label class="f">Marca<input id="pBrand" autocomplete="off" placeholder="opcional"></label>
         <label class="f">Categoría<select id="pCat"></select></label>
       </div>
-      <div class="row2">
-        <label class="f">Cantidad en casa<input id="pQty" type="number" min="0" step="1" inputmode="numeric"></label>
-        <label class="f">Stock mínimo<input id="pMin" type="number" min="0" step="1" inputmode="numeric"></label>
+      <div class="lots">
+        <div class="lh"><span>En casa · caducidad</span><span id="pTotal" class="mono">0 ud</span></div>
+        <div id="pLots" class="lots"></div>
+        <button type="button" class="addlot" id="pAddLot">+ Añadir unidades con otra fecha</button>
       </div>
-      <label class="f">Código de barras<input id="pCodeEdit" inputmode="numeric" autocomplete="off" placeholder="sin código"></label>
+      <div class="row2">
+        <label class="f">Stock mínimo<input id="pMin" type="number" min="0" step="1" inputmode="numeric"></label>
+        <label class="f">Código de barras<input id="pCodeEdit" inputmode="numeric" autocomplete="off" placeholder="sin código"></label>
+      </div>
       <div class="confirm" id="delConfirm" hidden>
-        <span>¿Borrar este producto de la despensa? Se olvida también su código.</span>
+        <span>¿Borrar este producto de la despensa? Se olvida también su código y su foto.</span>
         <div class="actions"><button class="btn" type="button" id="delNo">No</button><button class="btn danger" type="button" id="delYes">Sí, borrar</button></div>
       </div>
       <div class="actions">
@@ -355,7 +454,7 @@ body{padding-top:env(safe-area-inset-top,0px)}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js"></script>
 <script>
-/* ====== CONFIGURACIÓN (lo único que hay que tocar) ====== */
+/* ====== CONFIGURACIÓN ====== */
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyC62jQJpTGbN4wB9fOLHF-1Ta4C-EAoivY",
   authDomain: "despensa-ef150.firebaseapp.com",
@@ -365,25 +464,49 @@ const FIREBASE_CONFIG = {
   appId: "1:195171704685:web:86e3fd9364e2bc0a580464"
 };
 const CASA_EMAIL = "casa@despensa.casa";
-/* ======================================================== */
+/* =========================== */
 
 (function(){
 "use strict";
 const CATS=["Lácteos y huevos","Carne y pescado","Fruta y verdura","Pasta, arroz y legumbres","Conservas","Panadería y desayuno","Congelados","Salsas y especias","Bebidas","Snacks y dulces","Limpieza e higiene","Otros"];
 const $=s=>document.querySelector(s);
-const state={items:new Map(),cat:"Todas",mode:"in",db:null,editing:null};
+const state={items:new Map(),cat:"Todas",mode:"in"};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
 const cleanCode=s=>String(s||"").replace(/\s+/g,"").trim();
 const idFor=code=>code?("c-"+code.replace(/[^A-Za-z0-9_\-.]/g,"").slice(0,120)):("m-"+Math.random().toString(36).slice(2,10)+Date.now().toString(36));
-const status=it=>{const q=it.cantidad||0,m=it.minimo||0;return q<=0?"out":q<m?"low":"ok"};
-const missing=it=>(it.minimo||0)>(it.cantidad||0);
 const findByCode=code=>{const id=idFor(code);if(state.items.has(id))return id;for(const [k,d] of state.items)if(d.codigo===code)return k;return null};
+function lsGet(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+/* ---------- fechas ---------- */
+const pad=n=>String(n).padStart(2,"0");
+const isoDay=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const plusDays=n=>{const d=today();d.setDate(d.getDate()+n);return isoDay(d)};
+const daysTo=f=>Math.round((new Date(f+"T00:00:00")-today())/86400000);
+const fmtDay=f=>new Date(f+"T00:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"short"}).replace(".","");
+function whenText(f){const d=daysTo(f);if(d<0)return d===-1?"caducó ayer":`caducó hace ${-d} días`;if(d===0)return"caduca hoy";if(d===1)return"caduca mañana";if(d<=7)return`caduca en ${d} días`;return"cad. "+fmtDay(f)}
+function whenClass(f){const d=daysTo(f);return d<0?"past":d===0?"d0":d===1?"d1":d<=3?"d3":d<=7?"d7":""}
+
+/* ---------- lotes ---------- */
+function lotsOf(it){
+  if(Array.isArray(it.lotes))return it.lotes.map(l=>({f:l.f||"",n:Math.max(0,parseInt(l.n,10)||0)})).filter(l=>l.n>0);
+  const q=it.cantidad||0;return q>0?[{f:"",n:q}]:[];
+}
+function tidy(lots){
+  const m=new Map();for(const l of lots){const n=Math.max(0,parseInt(l.n,10)||0);if(!n)continue;m.set(l.f||"",(m.get(l.f||"")||0)+n)}
+  return [...m.entries()].map(([f,n])=>({f,n})).sort((a,b)=>a.f&&b.f?a.f.localeCompare(b.f):a.f?-1:b.f?1:0);
+}
+const total=lots=>lots.reduce((a,l)=>a+l.n,0);
+function nextExp(it){const l=lotsOf(it).find(x=>x.f);return l?l.f:""}
+function soonLots(it,days){return lotsOf(it).filter(l=>l.f&&daysTo(l.f)<=days)}
+const qty=it=>total(lotsOf(it));
+const status=it=>{const q=qty(it),m=it.minimo||0;return q<=0?"out":q<m?"low":"ok"};
+const missing=it=>(it.minimo||0)>qty(it);
 
 /* ---------- Firebase ---------- */
-const configured=!/PEGAR_AQUI/.test(JSON.stringify(FIREBASE_CONFIG));
-if(!configured){document.body.innerHTML='<div class="gate"><div class="card"><h1>Despensa</h1><p>Falta pegar la configuración de Firebase al principio del script (FIREBASE_CONFIG y CASA_EMAIL).</p></div></div>';return}
 firebase.initializeApp(FIREBASE_CONFIG);
 const auth=firebase.auth();const fs=firebase.firestore();
 try{fs.enablePersistence({synchronizeTabs:true}).catch(()=>{})}catch(e){}
@@ -399,7 +522,7 @@ $("#gateForm").addEventListener("submit",async e=>{
 });
 $("#logout").onclick=()=>auth.signOut();
 function start(){
-  if(unsub)return;state.db=fs;
+  if(unsub)return;
   unsub=fs.collection("productos").onSnapshot({includeMetadataChanges:true},snap=>{
     const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.items=m;render();
     setSync(snap.metadata.fromCache?"":"on",snap.metadata.fromCache?"Sin conexión · se sincroniza luego":"Al día");
@@ -408,19 +531,44 @@ function start(){
 function setSync(kind,txt){const s=$("#sync");s.className="sync "+kind;s.querySelector("span").textContent=txt}
 
 function saveItem(id,data){
-  const body=Object.assign({},data,{actualizado:Date.now()});
+  const lots=tidy(lotsOf(data));
+  const body=Object.assign({},data,{lotes:lots,cantidad:total(lots),actualizado:Date.now()});
   state.items.set(id,body);render();
-  return fs.collection("productos").doc(id).set(body).catch(e=>toast("No se ha guardado: "+e.message));
+  return fs.collection("productos").doc(id).set(body).catch(e=>toast(/exceeds|too large|size/i.test(e.message)?"La foto es demasiado grande. Prueba con otra.":"No se ha guardado: "+e.message));
 }
 function deleteItem(id){state.items.delete(id);render();return fs.collection("productos").doc(id).delete().catch(e=>toast("No se ha borrado: "+e.message))}
-function changeQty(id,delta){
+function addUnits(id,n,f){
   const it=state.items.get(id);if(!it)return null;
-  const before=it.cantidad||0,after=Math.max(0,before+delta);
-  if(after!==before){
-    state.items.set(id,Object.assign({},it,{cantidad:after,actualizado:Date.now()}));render();
-    fs.collection("productos").doc(id).update({cantidad:firebase.firestore.FieldValue.increment(after-before),actualizado:Date.now()}).catch(e=>toast("No se ha guardado: "+e.message));
-  }
-  return {before,after,nombre:it.nombre};
+  const lots=lotsOf(it);lots.push({f:f||"",n});
+  saveItem(id,Object.assign({},it,{lotes:lots}));
+  return {nombre:it.nombre,after:total(tidy(lots))};
+}
+function removeUnits(id,n){
+  const it=state.items.get(id);if(!it)return null;
+  const lots=tidy(lotsOf(it));let left=n;const used=[];
+  for(const l of lots){if(!left)break;const k=Math.min(l.n,left);l.n-=k;left-=k;if(k)used.push(l.f)}
+  if(left===n)return {nombre:it.nombre,after:0,none:true};
+  saveItem(id,Object.assign({},it,{lotes:lots}));
+  return {nombre:it.nombre,after:total(lots),from:used[0]||""};
+}
+
+/* ---------- fotos ---------- */
+function compress(file,max=260,q=.72){
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file);const img=new Image();
+    img.onload=()=>{
+      const sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+      const c=document.createElement("canvas");c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);
+      const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);res(c.toDataURL("image/jpeg",q));
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error("No se pudo leer la foto"))};
+    img.src=url;
+  });
+}
+const isOwn=src=>/^data:/.test(src||"");
+function picHtml(it,cls){
+  return it.imagen?`<img class="${cls}${isOwn(it.imagen)?" own":""}" src="${esc(it.imagen)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:`<span class="ph">${esc((it.nombre||"?").charAt(0).toUpperCase())}</span>`;
 }
 
 /* ---------- Open Food Facts ---------- */
@@ -450,7 +598,7 @@ const CAT_RULES=[
   ["Snacks y dulces",/snack|sweet|chocolate|candy|confection|biscuit|cookie|chip|crisp|dessert|galleta|patatas-fritas|dulce|helado|ice-cream/],
   ["Panadería y desayuno",/bread|bakery|breakfast|cereal|muesli|jam|honey|toast|pan|desayuno|mermelada|miel|cacao/],
   ["Salsas y especias",/sauce|condiment|spice|seasoning|oil|vinegar|salt|mayonnaise|ketchup|mustard|salsa|aceite|vinagre|sal\b|especia/],
-  ["Fruta y verdura",/fruit|vegetable|plant-based-foods-and-beverages$|fruta|verdura|hortaliza|ensalada/]
+  ["Fruta y verdura",/fruit|vegetable|fruta|verdura|hortaliza|ensalada/]
 ];
 function guessCat(tags,name){const s=norm(tags.join(" ")+" "+name);for(const [c,re] of CAT_RULES)if(re.test(s))return c;return"Otros"}
 
@@ -458,11 +606,19 @@ function guessCat(tags,name){const s=norm(tags.join(" ")+" "+name);for(const [c,
 function render(){
   const all=[...state.items.entries()].map(([id,d])=>Object.assign({id},d));
   const miss=all.filter(missing);
-  $("#stProd").textContent=all.filter(i=>(i.cantidad||0)>0).length;
-  $("#stUnits").textContent=all.reduce((a,i)=>a+(i.cantidad||0),0);
+  $("#stProd").textContent=all.filter(i=>qty(i)>0).length;
+  $("#stUnits").textContent=all.reduce((a,i)=>a+qty(i),0);
   $("#stMiss").textContent=miss.length;
   const b=$("#missBadge");b.hidden=!miss.length;b.textContent=miss.length;
-  renderChips(all);renderShelves(all);renderMiss(all,miss);
+  renderExp(all);renderChips(all);renderShelves(all);renderMiss(all,miss);
+}
+function renderExp(all){
+  const rows=[];
+  for(const i of all)for(const l of soonLots(i,7))rows.push({id:i.id,nombre:i.nombre,n:l.n,f:l.f});
+  rows.sort((a,b)=>a.f.localeCompare(b.f));
+  $("#stExp").textContent=rows.reduce((a,r)=>a+r.n,0);
+  $("#expCard").hidden=!rows.length;
+  $("#expList").innerHTML=rows.map(r=>`<li><button type="button" data-edit="${esc(r.id)}">${esc(r.nombre)} <span class="note">· ${r.n} ud</span></button><span class="when ${whenClass(r.f)}">${esc(whenText(r.f))}</span></li>`).join("");
 }
 function renderChips(all){
   const used=new Set(all.map(i=>i.categoria||"Otros"));
@@ -470,30 +626,34 @@ function renderChips(all){
   if(!cats.includes(state.cat))state.cat="Todas";
   $("#catChips").innerHTML=cats.map(c=>`<button class="chip" type="button" data-cat="${esc(c)}" aria-pressed="${c===state.cat}">${esc(c)}</button>`).join("");
 }
+function expPill(it){
+  const f=nextExp(it);if(!f||qty(it)<=0)return"";
+  const d=daysTo(f);const cls=d<0?"out":d<=7?"soon":"later";
+  return `<span class="pill ${cls}">${esc(d<0?"Caducado":whenText(f))}</span>`;
+}
 function itemRow(i,extra){
-  const st=status(i);
+  const st=status(i),q=qty(i);
   const pill=st==="out"?'<span class="pill out">Agotado</span>':st==="low"?'<span class="pill low">Bajo</span>':"";
-  const pic=i.imagen?`<img class="thumb" src="${esc(i.imagen)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:`<span class="ph">${esc((i.nombre||"?").charAt(0).toUpperCase())}</span>`;
-  return `<li class="item${(i.cantidad||0)===0?" zero":""}">${pic}
+  return `<li class="item${q===0?" zero":""}">${picHtml(i,"thumb")}
     <button class="info" type="button" data-edit="${esc(i.id)}"><div class="name">${esc(i.nombre)}</div>
-      <div class="meta">${pill}${i.marca?`<span>${esc(i.marca)}</span>`:""}${extra||""}${i.minimo?`<span class="mono">mín ${i.minimo}</span>`:""}</div></button>
-    <div class="stepper"><button type="button" data-dec="${esc(i.id)}" aria-label="Quitar uno de ${esc(i.nombre)}">−</button><output class="mono">${i.cantidad||0}</output><button type="button" data-inc="${esc(i.id)}" aria-label="Añadir uno de ${esc(i.nombre)}">+</button></div></li>`;
+      <div class="meta">${pill}${expPill(i)}${i.marca?`<span>${esc(i.marca)}</span>`:""}${extra||""}${i.minimo?`<span class="mono">mín ${i.minimo}</span>`:""}</div></button>
+    <div class="stepper"><button type="button" data-dec="${esc(i.id)}" aria-label="Quitar uno de ${esc(i.nombre)}">−</button><output class="mono">${q}</output><button type="button" data-inc="${esc(i.id)}" aria-label="Añadir uno de ${esc(i.nombre)}">+</button></div></li>`;
 }
 function renderShelves(all){
   const q=norm($("#q").value),showZero=$("#showZero").checked,el=$("#shelves");
   let list=all.filter(i=>state.cat==="Todas"||(i.categoria||"Otros")===state.cat);
   if(q)list=list.filter(i=>norm(i.nombre+" "+(i.marca||"")+" "+(i.codigo||"")).includes(q));
-  else if(!showZero)list=list.filter(i=>(i.cantidad||0)>0);
+  else if(!showZero)list=list.filter(i=>qty(i)>0);
   if(!all.length){el.innerHTML=`<div class="empty"><h3>La despensa está vacía</h3><p>Pulsa el botón verde de abajo y apunta la cámara a los códigos de barras de lo que vas guardando. Cada producto se reconoce y se suma solo.</p></div>`;return}
   if(!list.length){el.innerHTML=`<div class="empty"><h3>Nada por aquí</h3><p>${q?"Ningún producto coincide con la búsqueda.":"No hay nada en casa en esta categoría. Marca «Mostrar agotados» para ver lo que se acabó."}</p></div>`;return}
   const groups=new Map();list.sort((a,b)=>norm(a.nombre).localeCompare(norm(b.nombre)));
   for(const i of list){const c=i.categoria||"Otros";if(!groups.has(c))groups.set(c,[]);groups.get(c).push(i)}
-  el.innerHTML=CATS.filter(c=>groups.has(c)).map(c=>{const g=groups.get(c);return `<section class="shelf"><h2><span>${esc(c)}</span><span>${g.reduce((a,i)=>a+(i.cantidad||0),0)} ud</span></h2><ul class="items">${g.map(i=>itemRow(i)).join("")}</ul></section>`}).join("");
+  el.innerHTML=CATS.filter(c=>groups.has(c)).map(c=>{const g=groups.get(c);return `<section class="shelf"><h2><span>${esc(c)}</span><span>${g.reduce((a,i)=>a+qty(i),0)} ud</span></h2><ul class="items">${g.map(i=>itemRow(i)).join("")}</ul></section>`}).join("");
 }
 function renderMiss(all,miss){
   miss.sort((a,b)=>(a.categoria||"").localeCompare(b.categoria||"")||norm(a.nombre).localeCompare(norm(b.nombre)));
-  $("#missList").innerHTML=miss.length?miss.map(i=>itemRow(i,`<span class="need">comprar ${i.minimo-(i.cantidad||0)}</span>`)).join(""):`<li class="empty"><h3>No falta nada</h3><p>Ponle un stock mínimo a lo que siempre quieras tener (leche, huevos, aceite…) y aparecerá aquí cuando baje.</p></li>`;
-  const zero=all.filter(i=>(i.cantidad||0)===0&&!missing(i));
+  $("#missList").innerHTML=miss.length?miss.map(i=>itemRow(i,`<span class="need">comprar ${i.minimo-qty(i)}</span>`)).join(""):`<li class="empty"><h3>No falta nada</h3><p>Ponle un stock mínimo a lo que siempre quieras tener (leche, huevos, aceite…) y aparecerá aquí cuando baje.</p></li>`;
+  const zero=all.filter(i=>qty(i)===0&&!missing(i));
   $("#zeroWrap").hidden=!zero.length;$("#zeroList").innerHTML=zero.map(i=>itemRow(i)).join("");
 }
 
@@ -505,23 +665,55 @@ $("#q").addEventListener("input",render);$("#showZero").addEventListener("change
 $("#catChips").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(b){state.cat=b.dataset.cat;render()}});
 $("#app").addEventListener("click",e=>{
   const inc=e.target.closest("[data-inc]"),dec=e.target.closest("[data-dec]"),ed=e.target.closest("[data-edit]");
-  if(inc)changeQty(inc.dataset.inc,1);else if(dec)changeQty(dec.dataset.dec,-1);else if(ed)openProduct({id:ed.dataset.edit});
+  if(inc)addUnits(inc.dataset.inc,1,"");
+  else if(dec){const r=removeUnits(dec.dataset.dec,1);if(r&&r.from)toast(`−1 ${r.nombre} (la que ${whenText(r.from).replace(/^cad\. /,"caduca el ")})`)}
+  else if(ed)openProduct({id:ed.dataset.edit});
 });
 
-/* ---------- hoja de producto ---------- */
-let sheetEl=null,onSheetClose=null;
+/* ---------- ficha de producto ---------- */
+let sheetEl=null,onSheetClose=null,form={lots:[],img:""};
 function openSheet(el){sheetEl=el;$("#scrim").hidden=false;el.hidden=false}
 function closeSheet(){if(sheetEl)sheetEl.hidden=true;sheetEl=null;$("#scrim").hidden=true;const f=onSheetClose;onSheetClose=null;f&&f()}
 $("#scrim").addEventListener("click",closeSheet);
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",closeSheet));
 function fillCats(sel){$("#pCat").innerHTML=CATS.map(c=>`<option${c===sel?" selected":""}>${esc(c)}</option>`).join("")}
-function openProduct({id,code,hint,after}){
-  const it=id?state.items.get(id):null;state.editing=id||null;onSheetClose=after||null;
+function renderPhoto(){
+  const box=$("#pPhoto");box.innerHTML=form.img?`<img src="${esc(form.img)}" alt="Foto del producto" referrerpolicy="no-referrer">`:"Sin foto";
+  $("#pPhotoRm").hidden=!form.img;
+}
+function renderLots(){
+  if(!form.lots.length)form.lots=[{f:"",n:0}];
+  $("#pLots").innerHTML=form.lots.map((l,k)=>`<div class="lot" data-k="${k}">
+    <input type="date" value="${esc(l.f)}" data-lf="${k}" aria-label="Fecha de caducidad">
+    <div class="stepper"><button type="button" data-lm="${k}" aria-label="Una menos">−</button><output class="mono">${l.n}</output><button type="button" data-lp="${k}" aria-label="Una más">+</button></div>
+    <button type="button" class="rm" data-lr="${k}" aria-label="Quitar esta fila"${form.lots.length<2?" hidden":""}>✕</button></div>`).join("");
+  $("#pTotal").textContent=total(form.lots.map(l=>({n:l.n})))+" ud";
+}
+$("#pLots").addEventListener("click",e=>{
+  const p=e.target.closest("[data-lp]"),m=e.target.closest("[data-lm]"),r=e.target.closest("[data-lr]");
+  if(p)form.lots[+p.dataset.lp].n++;else if(m)form.lots[+m.dataset.lm].n=Math.max(0,form.lots[+m.dataset.lm].n-1);else if(r)form.lots.splice(+r.dataset.lr,1);else return;
+  renderLots();
+});
+$("#pLots").addEventListener("change",e=>{const d=e.target.closest("[data-lf]");if(d)form.lots[+d.dataset.lf].f=d.value||""});
+$("#pAddLot").onclick=()=>{form.lots.push({f:"",n:1});renderLots()};
+async function onPickPhoto(input){
+  const f=input.files&&input.files[0];input.value="";if(!f)return;
+  try{form.img=await compress(f);renderPhoto()}catch(e){toast(e.message)}
+}
+$("#pPhotoCam").addEventListener("change",e=>onPickPhoto(e.target));
+$("#pPhotoGal").addEventListener("change",e=>onPickPhoto(e.target));
+$("#pPhotoRm").onclick=()=>{form.img="";renderPhoto()};
+
+function openProduct({id,code,hint,after,preset}){
+  const it=id?state.items.get(id):null;form.editing=id||null;onSheetClose=after||null;form.saved=false;
   $("#prodTitle").textContent=it?"Editar producto":"Producto nuevo";
   const h=$("#prodHint");h.hidden=!hint;h.innerHTML=hint||"";
-  $("#pName").value=it?.nombre||"";$("#pBrand").value=it?.marca||"";fillCats(it?.categoria||"Otros");
-  $("#pQty").value=it?(it.cantidad||0):1;$("#pMin").value=it?(it.minimo||0):0;
-  $("#pCodeEdit").value=it?.codigo||code||"";
+  const src=it||preset||{};
+  $("#pName").value=src.nombre||"";$("#pBrand").value=src.marca||"";fillCats(src.categoria||"Otros");
+  $("#pMin").value=src.minimo||0;$("#pCodeEdit").value=src.codigo||code||"";
+  form.img=src.imagen||"";
+  form.lots=it?tidy(lotsOf(it)).map(l=>({f:l.f,n:l.n})):(preset&&preset.lotes?preset.lotes.map(l=>({f:l.f,n:l.n})):[{f:"",n:1}]);
+  renderPhoto();renderLots();
   $("#delBtn").hidden=!it;$("#delConfirm").hidden=true;$("#prodErr").hidden=true;
   openSheet($("#prodSheet"));if(!it)setTimeout(()=>$("#pName").focus(),60);
 }
@@ -529,16 +721,18 @@ $("#addManual").onclick=()=>openProduct({});
 $("#prodForm").addEventListener("submit",e=>{
   e.preventDefault();const err=$("#prodErr");
   const nombre=$("#pName").value.trim();if(!nombre){err.hidden=false;err.textContent="Ponle un nombre al producto.";return}
-  const codigo=cleanCode($("#pCodeEdit").value);const id=state.editing;const old=id?state.items.get(id):null;
+  const codigo=cleanCode($("#pCodeEdit").value);const id=form.editing;const old=id?state.items.get(id):null;
   if(codigo){const d=findByCode(codigo);if(d&&d!==id){err.hidden=false;err.textContent=`Ese código ya es de «${state.items.get(d).nombre}».`;return}}
-  const data={nombre,marca:$("#pBrand").value.trim(),categoria:$("#pCat").value,cantidad:Math.max(0,parseInt($("#pQty").value,10)||0),minimo:Math.max(0,parseInt($("#pMin").value,10)||0),codigo,imagen:old?.imagen||"",creado:old?.creado||Date.now()};
+  const data={nombre,marca:$("#pBrand").value.trim(),categoria:$("#pCat").value,lotes:form.lots,minimo:Math.max(0,parseInt($("#pMin").value,10)||0),codigo,imagen:form.img||"",creado:old?.creado||Date.now()};
   const wantId=codigo?idFor(codigo):(id&&id.startsWith("m-")?id:idFor(""));
   if(id&&id!==wantId)deleteItem(id);
-  saveItem(wantId,data);closeSheet();toast(old?`${nombre} guardado`:`${nombre} añadido (${data.cantidad})`);
+  saveItem(wantId,data);form.saved=wantId;
+  const n=total(tidy(form.lots));
+  closeSheet();toast(old?`${nombre} guardado`:`${nombre} añadido (${n})`);
 });
 $("#delBtn").onclick=()=>$("#delConfirm").hidden=false;
 $("#delNo").onclick=()=>$("#delConfirm").hidden=true;
-$("#delYes").onclick=()=>{const id=state.editing,it=state.items.get(id);if(id){deleteItem(id);closeSheet();toast((it?.nombre||"Producto")+" borrado")}};
+$("#delYes").onclick=()=>{const id=form.editing,it=state.items.get(id);if(id){deleteItem(id);closeSheet();toast((it?.nombre||"Producto")+" borrado")}};
 
 /* ---------- toast ---------- */
 let toastT=null;
@@ -546,9 +740,11 @@ function toast(msg,actLabel,act){const t=$("#toast");$("#toastMsg").textContent=
 
 /* ---------- escáner ---------- */
 let stream=null,running=false,paused=false,lastCode="",lastAt=0,audio=null,detector=null,track=null;
-function setMode(m){state.mode=m;$("#modeIn").setAttribute("aria-pressed",m==="in");$("#modeOut").setAttribute("aria-pressed",m==="out")}
+const askEl=$("#askToggle");askEl.checked=lsGet("despensa.ask",true);askEl.onchange=()=>lsSet("despensa.ask",askEl.checked);
+function setMode(m){state.mode=m;$("#modeIn").setAttribute("aria-pressed",m==="in");$("#modeOut").setAttribute("aria-pressed",m==="out");if(m==="out")hideQuick()}
 $("#modeIn").onclick=()=>setMode("in");$("#modeOut").onclick=()=>setMode("out");
 $("#openScan").onclick=openScanner;$("#closeScan").onclick=closeScanner;
+
 function camMsg(html){const c=$("#camErr");c.hidden=!html;c.innerHTML=html||""}
 function camFallbackHtml(msg){
   return `<div style="display:grid;gap:14px;max-width:340px">
@@ -557,13 +753,10 @@ function camFallbackHtml(msg){
     <span class="btn" style="position:relative;overflow:hidden;justify-content:center;background:#e7ece4;color:#111;border:0">📷 Hacer foto al código<input type="file" accept="image/*" capture="environment" id="camShot" style="position:absolute;inset:0;opacity:0;width:100%;height:100%"></span>
   </div>`;
 }
-function wireFallback(){
-  const r=$("#camRetry");if(r)r.onclick=()=>startCamera();
-  const f=$("#camShot");if(f)f.addEventListener("change",e=>readPhoto(e.target));
-}
+function wireFallback(){const r=$("#camRetry");if(r)r.onclick=()=>startCamera();const f=$("#camShot");if(f)f.addEventListener("change",e=>readPhoto(e.target))}
 const inApp=/FBAN|FBAV|Instagram|Line\/|WhatsApp|GSA\/|; wv\)|Gmail/i.test(navigator.userAgent);
 function openScanner(){
-  $("#scanner").hidden=false;$("#log").innerHTML="";camMsg("");paused=false;
+  $("#scanner").hidden=false;$("#log").innerHTML="";camMsg("");hideQuick();paused=false;
   try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();if(audio.state==="suspended")audio.resume()}catch(e){}
   startCamera();
   if("BarcodeDetector" in window&&!detector){BarcodeDetector.getSupportedFormats().then(f=>{const want=["ean_13","ean_8","upc_a","upc_e","code_128","code_39","itf"].filter(x=>f.includes(x));if(want.length&&!detector)detector=new BarcodeDetector({formats:want})}).catch(()=>{})}
@@ -574,7 +767,7 @@ async function startCamera(){
   if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
     camMsg(camFallbackHtml(inApp?"Estás dentro del navegador de otra app (Gmail, WhatsApp…) y no deja usar la cámara. Abre la web en Chrome o Safari, o usa la foto:":"Este navegador no deja usar la cámara en directo. Usa la foto:"));wireFallback();return;
   }
-  const v=$("#video");v.muted=true;v.setAttribute("muted","");v.setAttribute("playsinline","");v.setAttribute("autoplay","");
+  const v=$("#video");v.muted=true;
   const timer=setTimeout(()=>{if(!running){camMsg(camFallbackHtml("La cámara no arranca. Si el móvil te ha preguntado por el permiso, pulsa <b>Permitir</b>. Si no, toca el botón:"));wireFallback()}},6000);
   try{
     try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false})}
@@ -598,7 +791,7 @@ function begin(){
   try{const caps=track.getCapabilities&&track.getCapabilities();$("#torchBtn").hidden=!(caps&&caps.torch);if(caps&&caps.focusMode&&caps.focusMode.includes("continuous"))track.applyConstraints({advanced:[{focusMode:"continuous"}]}).catch(()=>{})}catch(e){}
   if(!running){running=true;loop()}
 }
-function closeScanner(){running=false;camMsg("");if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$("#scanner").hidden=true}
+function closeScanner(){running=false;camMsg("");hideQuick();if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$("#scanner").hidden=true}
 let torchOn=false;
 $("#torchBtn").onclick=()=>{if(!track)return;torchOn=!torchOn;track.applyConstraints({advanced:[{torch:torchOn}]}).catch(()=>{})};
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&running)closeScanner()});
@@ -616,31 +809,79 @@ async function loop(){
         x.drawImage(v,(vw-cw)/2,(vh-ch)/2*0.9,cw,ch,0,0,cw,ch);code=zx(work);
       }
     }catch(e){}
-    if(code){code=cleanCode(code);const now=Date.now();if(code!==lastCode||now-lastAt>3000){lastCode=code;lastAt=now;onDetected(code)}}
+    if(code&&!paused){code=cleanCode(code);const now=Date.now();if(code!==lastCode||now-lastAt>3000){lastCode=code;lastAt=now;onDetected(code)}}
   }
   setTimeout(loop,detector?120:220);
 }
 function beep(ok){try{if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=ok?1200:400;g.gain.value=.08;o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+(ok?.09:.25))}catch(e){}}
 function flash(){const f=$("#frame");f.classList.add("hit");setTimeout(()=>f.classList.remove("hit"),400)}
-function logLine(kind,qty,text,id){
-  const li=document.createElement("li");li.innerHTML=`<b class="${kind}">${esc(qty)}</b><span class="t">${esc(text)}</span>${id?`<button type="button">Editar</button>`:""}`;
+function logLine(kind,qtyTxt,text,id){
+  const li=document.createElement("li");li.innerHTML=`<b class="${kind}">${esc(qtyTxt)}</b><span class="t">${esc(text)}</span>${id?`<button type="button">Editar</button>`:""}`;
   if(id)li.querySelector("button").onclick=()=>{paused=true;openProduct({id,after:()=>{paused=false}})};
   $("#log").prepend(li);
 }
+function resume(){paused=false;lastAt=Date.now();$("#hint").textContent="Apunta al código de barras."}
+
+/* tarjeta rápida: unidades + caducidad */
+let pending=null,qState={n:1,f:""};
+function qRender(){
+  $("#qN").textContent=qState.n;
+  document.querySelectorAll("#qPacks button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===qState.n));
+  const chosen=qState.f;let match=false;
+  document.querySelectorAll("#qDates button").forEach(b=>{const d=b.dataset.d;const on=d===""?!chosen:(chosen===plusDays(+d));if(on)match=true;b.setAttribute("aria-pressed",on)});
+  $("#qDate").value=chosen||"";
+  $("#qOk").textContent=`Añadir ${qState.n}${chosen?" · "+fmtDay(chosen):""}`;
+}
+function showQuick(p){
+  pending=p;qState={n:1,f:""};paused=true;
+  const it=p.data;
+  $("#qImg").innerHTML=it.imagen?`<img class="${isOwn(it.imagen)?"own":""}" src="${esc(it.imagen)}" alt="" referrerpolicy="no-referrer">`:esc((it.nombre||"?").charAt(0).toUpperCase());
+  $("#qName").textContent=it.nombre;
+  $("#qSub").textContent=p.isNew?"Producto nuevo · reconocido en Open Food Facts":`Hay ${qty(it)} en casa${nextExp(it)?" · la primera "+whenText(nextExp(it)).replace(/^cad\. /,"caduca el "):""}`;
+  $("#quick").hidden=false;$("#scanFoot").hidden=true;qRender();
+}
+function hideQuick(){pending=null;$("#quick").hidden=true;$("#scanFoot").hidden=false}
+$("#qPlus").onclick=()=>{qState.n=Math.min(99,qState.n+1);qRender()};
+$("#qMinus").onclick=()=>{qState.n=Math.max(1,qState.n-1);qRender()};
+$("#qPacks").addEventListener("click",e=>{const b=e.target.closest("[data-n]");if(b){qState.n=+b.dataset.n;qRender()}});
+$("#qDates").addEventListener("click",e=>{const b=e.target.closest("[data-d]");if(b){qState.f=b.dataset.d===""?"":plusDays(+b.dataset.d);qRender()}});
+$("#qDate").addEventListener("change",e=>{qState.f=e.target.value||"";qRender()});
+$("#qCancel").onclick=()=>{hideQuick();resume()};
+$("#qOk").onclick=()=>{
+  if(!pending)return;const {id,isNew,data}=pending;const n=qState.n,f=qState.f;
+  if(isNew){saveItem(id,Object.assign({},data,{lotes:[{f,n}]}));logLine("new","+"+n,`Nuevo: ${data.nombre}${f?" · "+fmtDay(f):""}`,id)}
+  else{const r=addUnits(id,n,f);logLine("in","+"+n,`${r.nombre} · hay ${r.after}${f?" · "+fmtDay(f):""}`,id)}
+  beep(true);hideQuick();resume();
+};
+
 async function onDetected(code){
   flash();try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}
   const hit=findByCode(code);
-  if(hit){const r=changeQty(hit,state.mode==="in"?1:-1);beep(true);
-    logLine(state.mode==="in"?"in":"out",state.mode==="in"?"+1":"−1",`${r.nombre} · quedan ${r.after}`,hit);return}
-  if(state.mode==="out"){beep(false);logLine("out","?",`${code} no está en la despensa`);return}
+  if(state.mode==="out"){
+    if(!hit){beep(false);logLine("out","?",`${code} no está en la despensa`);return}
+    const r=removeUnits(hit,1);
+    if(r.none){beep(false);logLine("out","0",`${r.nombre} ya estaba a 0`,hit);return}
+    beep(true);logLine("out","−1",`${r.nombre}${r.from?" ("+fmtDay(r.from)+")":""} · quedan ${r.after}`,hit);return;
+  }
+  if(hit){
+    const it=Object.assign({id:hit},state.items.get(hit));
+    if(askEl.checked){beep(true);showQuick({id:hit,isNew:false,data:it});return}
+    const r=addUnits(hit,1,"");beep(true);logLine("in","+1",`${r.nombre} · hay ${r.after}`,hit);return;
+  }
   paused=true;$("#hint").textContent="Buscando el producto…";
-  const p=await lookup(code);$("#hint").textContent="Apunta al código de barras. Se guarda solo.";
+  const p=await lookup(code);$("#hint").textContent="Apunta al código de barras.";
+  const id=idFor(code);
   if(p){
-    const id=idFor(code);saveItem(id,Object.assign(p,{cantidad:1,minimo:0,codigo:code,creado:Date.now()}));
-    beep(true);logLine("new","+1",`Nuevo: ${p.nombre}`,id);paused=false;
+    const data=Object.assign(p,{minimo:0,codigo:code,creado:Date.now()});
+    beep(true);
+    if(askEl.checked){showQuick({id,isNew:true,data});return}
+    saveItem(id,Object.assign({},data,{lotes:[{f:"",n:1}]}));logLine("new","+1",`Nuevo: ${p.nombre}`,id);resume();
   }else{
     beep(false);
-    openProduct({code,hint:`El código <span class="mono">${esc(code)}</span> no aparece en Open Food Facts. Ponle nombre una vez y la próxima vez se reconocerá solo.`,after:()=>{paused=false;const id=findByCode(code);if(id)logLine("new","+"+(state.items.get(id)?.cantidad||1),`Nuevo: ${state.items.get(id)?.nombre}`,id)}});
+    openProduct({code,hint:`El código <span class="mono">${esc(code)}</span> no está en Open Food Facts. Ponle nombre y <b>hazle una foto</b>: la próxima vez que lo escanees saldrá directamente.`,after:()=>{
+      const sid=form.saved;if(sid&&state.items.get(sid)){const it=state.items.get(sid);logLine("new","+"+qty(it),`Nuevo: ${it.nombre}`,sid)}
+      resume();
+    }});
   }
 }
 $("#codeForm").addEventListener("submit",e=>{e.preventDefault();const c=cleanCode($("#codeInput").value);$("#codeInput").value="";if(c){lastCode=c;lastAt=Date.now();onDetected(c)}});
@@ -651,7 +892,7 @@ function readPhoto(input){
     try{if(detector){const r=await detector.detect(img);if(r&&r.length)code=r[0].rawValue}}catch(x){}
     if(!code&&window.ZXing){for(const max of [1400,900,2000]){const sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));work.width=Math.round(img.naturalWidth*sc);work.height=Math.round(img.naturalHeight*sc);work.getContext("2d",{willReadFrequently:true}).drawImage(img,0,0,work.width,work.height);code=zx(work);if(code)break}}
     URL.revokeObjectURL(url);
-    if(code)onDetected(cleanCode(code));else{beep(false);logLine("out","?","No se ve ningún código en la foto. Acércate más y con luz.")}
+    if(code){camMsg("");onDetected(cleanCode(code))}else{beep(false);logLine("out","?","No se ve ningún código en la foto. Acércate más y con luz.")}
   };img.src=url;
 }
 $("#photoInput").addEventListener("change",e=>readPhoto(e.target));
@@ -675,15 +916,16 @@ function copyText(txt,okMsg){
 $("#copyList").onclick=()=>{
   const miss=[...state.items.values()].filter(missing).sort((a,b)=>norm(a.nombre).localeCompare(norm(b.nombre)));
   if(!miss.length){toast("No falta nada");return}
-  const txt="Lista de la compra\n"+miss.map(i=>`- ${i.nombre}${i.marca?" ("+i.marca+")":""} x${i.minimo-(i.cantidad||0)}`).join("\n");
+  const txt="Lista de la compra\n"+miss.map(i=>`- ${i.nombre}${i.marca?" ("+i.marca+")":""} x${i.minimo-qty(i)}`).join("\n");
   if(navigator.share){navigator.share({text:txt}).catch(()=>copyText(txt,"Lista copiada"))}else copyText(txt,"Lista copiada");
 };
 $("#recipeForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const have=[...state.items.values()].filter(i=>(i.cantidad||0)>0);
+  const have=[...state.items.values()].filter(i=>qty(i)>0);
   if(!have.length){toast("La despensa está vacía");return}
   const t=$("#rTime").value,w=$("#rWish").value.trim();
-  const txt=`Propón 4 recetas para ${$("#rPeople").value} persona(s)${t!=="0"?`, de ${t} minutos como máximo`:""}${w?`. Me apetece: ${w}`:""}. ${$("#rStrict").checked?"Usa solo lo que tengo en la despensa (más sal, aceite, agua y especias básicas).":"Prioriza lo que tengo; puede faltar como mucho 1 o 2 ingredientes, indícalos."} Para cada una: ingredientes con cantidades y pasos.\n\nMi despensa:\n`+have.map(i=>`- ${i.nombre}${i.marca?" ("+i.marca+")":""}: ${i.cantidad} ud`).join("\n");
+  const line=i=>{const s=soonLots(i,7);return `- ${i.nombre}${i.marca?" ("+i.marca+")":""}: ${qty(i)} ud${s.length?" — "+s.map(l=>`${l.n} ${whenText(l.f)}`).join(", "):""}`};
+  const txt=`Propón 4 recetas para ${$("#rPeople").value} persona(s)${t!=="0"?`, de ${t} minutos como máximo`:""}${w?`. Me apetece: ${w}`:""}. ${$("#rStrict").checked?"Usa solo lo que tengo en la despensa (más sal, aceite, agua y especias básicas).":"Prioriza lo que tengo; puede faltar como mucho 1 o 2 ingredientes, indícalos."}${$("#rExpire").checked?" Da prioridad a lo que caduca pronto (lo indico en la lista).":""} Para cada una: ingredientes con cantidades y pasos.\n\nMi despensa:\n`+have.map(line).join("\n");
   copyText(txt);
   window.open("https://claude.ai/new?q="+encodeURIComponent(txt),"_blank");
 });
