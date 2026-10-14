@@ -1,5 +1,5 @@
 // Despensa: funciona sin conexión y siempre intenta cargar la última versión
-const CACHE = "despensa-v4";
+const CACHE = "despensa-v5";
 const LIBS = /(www\.gstatic\.com\/firebasejs|cdn\.jsdelivr\.net\/npm\/@zxing|fonts\.googleapis\.com|fonts\.gstatic\.com)/;
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", e => e.waitUntil((async () => {

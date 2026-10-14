@@ -187,7 +187,8 @@ body{padding-top:env(safe-area-inset-top,0px)}
 /* Escáner a pantalla completa */
 .scanner{position:fixed;inset:0;z-index:50;background:#000;display:grid;grid-template-rows:auto 1fr auto;color:#fff}
 .scanner header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px;background:rgba(0,0,0,.6)}
-.scanner .seg{background:rgba(255,255,255,.12);flex:1;max-width:340px}
+.scanner .seg{background:rgba(255,255,255,.12);flex:1;max-width:380px;grid-template-columns:1fr 1fr 1fr}
+.scanner .seg button{padding:10px 4px;font-size:.88rem}
 .scanner .seg button{color:rgba(255,255,255,.7)}
 .scanner .seg button[aria-pressed="true"]{background:#fff;color:#111}
 .scanner .close{background:none;border:0;color:#fff;font-weight:700;padding:10px}
@@ -362,6 +363,46 @@ body{padding-top:env(safe-area-inset-top,0px)}
 .cartbar{position:fixed;left:0;right:0;bottom:calc(74px + env(safe-area-inset-bottom,0px));z-index:19;padding:0 16px}
 .cartbar .btn{width:100%;max-width:688px;margin:0 auto;display:flex;justify-content:center;padding:14px;box-shadow:var(--shadow);font-size:1rem}
 body:has(#cartBar:not([hidden])) .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+/* v5 */
+.locs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:12px;background:var(--surface-2);padding:4px;border-radius:14px}
+.locs button{border:0;background:transparent;border-radius:10px;padding:8px 2px;font-weight:700;font-size:.82rem;color:var(--muted);display:grid;gap:1px;justify-items:center}
+.locs button span{font-family:var(--f-mono);font-size:.72rem;font-weight:500}
+.locs button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.pill.open{background:#e3ecf7;color:#2f5d8a}
+:root[data-theme="dark"] .pill.open{background:#1d2a3a;color:#8fb8e6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pill.open{background:#1d2a3a;color:#8fb8e6}}
+.loc-tag{font-size:.72rem;color:var(--muted)}
+.opensec{border:1px dashed var(--line);border-radius:12px;padding:10px 12px;display:grid;gap:8px}
+.opensec .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.opensec input{width:70px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px;font-family:var(--f-mono);color:var(--ink)}
+.sugg{font-size:.8rem;color:var(--olive);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sugg button{border:1px solid var(--olive);color:var(--olive);background:transparent;border-radius:8px;padding:3px 8px;font-weight:700;font-size:.78rem}
+.cadrow .acts2{display:grid;gap:6px}
+.cadrow .throw{border:1px solid var(--line);background:transparent;color:var(--red);border-radius:10px;padding:6px 10px;font-weight:700;font-size:.8rem}
+.qlocs{display:flex;gap:6px;flex-wrap:wrap}
+.qprice{display:flex;gap:8px;align-items:center}
+.qprice input{width:96px;background:#222;border:1px solid #333;color:#fff;border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+.consult{display:grid;gap:10px}
+.consult .big{font-family:var(--f-display);font-size:1.6rem;font-weight:800}
+.consult .big.none{color:#f08a76}
+.consult ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:.9rem;color:#ddd}
+.aisle{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--olive);padding:12px 0 2px;list-style:none}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.kpi small{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.kpi b{display:block;font-family:var(--f-mono);font-size:1.4rem;margin-top:2px;font-variant-numeric:tabular-nums}
+.kpi span{font-size:.78rem;color:var(--muted)}
+.kpi.red b{color:var(--red)}
+.bars{display:grid;gap:8px;margin-top:10px}
+.bar{display:grid;grid-template-columns:minmax(0,9rem) minmax(0,1fr) auto;gap:8px;align-items:center;font-size:.85rem}
+.bar .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .trk{display:block;height:12px;background:var(--surface-2);border-radius:6px;overflow:hidden}
+.bar .fil{display:block;height:100%;background:var(--olive);border-radius:6px}
+.bar .fil.red{background:var(--red)}
+.bar .val{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.alertlist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.alertlist li{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.gear2{margin-right:6px}
 .addzero{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 10px;font-weight:700;font-size:.82rem;white-space:nowrap}
 .hero .sync.on i{background:#b9e08f}
 .cadrow .thumb,.cadrow .ph{width:44px;height:44px;border-radius:10px}
@@ -391,7 +432,7 @@ body:has(#cartBar:not([hidden])) .toast{bottom:calc(150px + env(safe-area-inset-
     <div class="hero-top">
       <div><small id="hello">Hola</small><h1>Despensa</h1><span class="today" id="todayTxt"></span></div>
       <div style="display:grid;gap:8px;justify-items:end">
-        <button class="gear" id="openSettings" type="button" aria-label="Ajustes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+        <div style="display:flex;gap:6px"><button class="gear" id="openStats" type="button" aria-label="Estadísticas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></button><button class="gear" id="openSettings" type="button" aria-label="Ajustes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>
         <div class="sync" id="sync"><i></i><span>Conectando…</span></div>
       </div>
     </div>
@@ -409,6 +450,7 @@ body:has(#cartBar:not([hidden])) .toast{bottom:calc(150px + env(safe-area-inset-
       <div class="strip" id="strip"></div>
     </div>
     <div class="sechead" id="listHead"><h2>En casa</h2><button class="linkbtn" id="addManual" type="button">+ Añadir sin código</button></div>
+    <div class="locs" id="locFilter" role="group" aria-label="Dónde está"></div>
     <div class="toolbar" style="margin-top:10px">
       <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="q" type="search" placeholder="Buscar producto o código" autocomplete="off"></label>
@@ -453,6 +495,16 @@ body:has(#cartBar:not([hidden])) .toast{bottom:calc(150px + env(safe-area-inset-
     <div id="cadList"></div>
   </section>
 
+  <section class="view" id="view-stats" hidden>
+    <div class="viewhead" style="margin-top:18px"><button class="back" type="button" data-go="list" aria-label="Volver a la despensa">←</button><h2 style="font-size:1.5rem">Estadísticas</h2></div>
+    <div class="cadfilter" id="statPeriod" role="group" aria-label="Periodo">
+      <button class="chip" type="button" data-sp="mes" aria-pressed="true">Este mes</button>
+      <button class="chip" type="button" data-sp="30">Últimos 30 días</button>
+      <button class="chip" type="button" data-sp="90">3 meses</button>
+    </div>
+    <div id="statBody"></div>
+  </section>
+
   <section class="view" id="view-recetas" hidden>
     <h2 style="font-size:1.5rem">¿Qué cocino con lo que hay?</h2>
     <form class="recipe-form" id="recipeForm">
@@ -494,6 +546,7 @@ body:has(#cartBar:not([hidden])) .toast{bottom:calc(150px + env(safe-area-inset-
     <div class="seg" role="group" aria-label="Tipo de movimiento">
       <button type="button" id="modeIn" aria-pressed="true">＋ Meter</button>
       <button type="button" id="modeOut" aria-pressed="false">－ Gastado</button>
+      <button type="button" id="modeAsk" aria-pressed="false">¿Hay?</button>
     </div>
     <button class="close" id="closeScan" type="button">Hecho</button>
   </header>
@@ -523,7 +576,16 @@ body:has(#cartBar:not([hidden])) .toast{bottom:calc(150px + env(safe-area-inset-
       </div>
       <div class="dfield"><input class="dtxt" id="qDate" inputmode="numeric" maxlength="10" placeholder="dd/mm/aaaa" autocomplete="off" aria-label="Fecha de caducidad (día/mes/año)"><span class="calbtn" aria-hidden="true">📅<input type="date" id="qCal" tabindex="-1" aria-label="Elegir en el calendario"></span></div>
       <div class="dhint">Escribe la fecha tal cual viene en el envase: 251126 → 25/11/2026</div>
+      <div class="qlabel">Dónde</div>
+      <div class="qchips qlocs" id="qLocs"><button type="button" data-l="despensa">Despensa</button><button type="button" data-l="nevera">Nevera</button><button type="button" data-l="congelador">Congelador</button></div>
+      <div class="qprice"><span class="qlabel">Precio por unidad</span><input id="qPrice" inputmode="decimal" placeholder="€ opcional" autocomplete="off" aria-label="Precio por unidad en euros"></div>
       <div class="qact"><button type="button" class="btn no" id="qCancel">Cancelar</button><button type="button" class="btn ok" id="qOk">Añadir 1</button></div>
+    </div>
+    <div class="consult" id="consult" hidden>
+      <div class="qhead"><div class="qimg" id="cImg"></div><div style="min-width:0"><b id="cName"></b><small id="cSub"></small></div></div>
+      <div class="big" id="cBig"></div>
+      <ul id="cInfo"></ul>
+      <div class="qact"><button type="button" class="btn no" id="cNext">Seguir</button><button type="button" class="btn ok" id="cBuy">Añadir a la lista</button></div>
     </div>
     <div id="scanFoot">
       <ul class="log" id="log"></ul>
@@ -560,13 +622,19 @@ body:has(#cartBar:not([hidden])) .toast{bottom:calc(150px + env(safe-area-inset-
         <label class="f">Marca<input id="pBrand" autocomplete="off" placeholder="opcional"></label>
         <label class="f">Categoría<select id="pCat"></select></label>
       </div>
+      <div class="row2">
+        <label class="f">Dónde está<select id="pLoc"><option value="despensa">Despensa</option><option value="nevera">Nevera</option><option value="congelador">Congelador</option></select></label>
+        <label class="f">Precio por unidad (€)<input id="pPrice" inputmode="decimal" placeholder="opcional" autocomplete="off"></label>
+      </div>
       <div class="lots">
         <div class="lh"><span>En casa · caducidad</span><span id="pTotal" class="mono">0 ud</span></div>
         <div id="pLots" class="lots"></div>
         <button type="button" class="addlot" id="pAddLot">+ Añadir unidades con otra fecha</button>
+        <button type="button" class="btn danger" id="pThrow" hidden style="justify-self:start">Tirar los caducados</button>
       </div>
+      <div class="opensec" id="pOpen"></div>
       <div class="row2">
-        <label class="f">Stock mínimo<input id="pMin" type="number" min="0" step="1" inputmode="numeric"></label>
+        <label class="f">Stock mínimo<input id="pMin" type="number" min="0" step="1" inputmode="numeric"><span class="sugg" id="pSugg" hidden></span></label>
         <label class="f">Código de barras<input id="pCodeEdit" inputmode="numeric" autocomplete="off" placeholder="sin código"></label>
       </div>
       <div class="confirm" id="delConfirm" hidden>
@@ -588,12 +656,23 @@ body:has(#cartBar:not([hidden])) .toast{bottom:calc(150px + env(safe-area-inset-
     <div class="grab"></div>
     <h2 id="setTitle">Ajustes</h2>
     <div class="setlist">
+      <button class="btn" type="button" id="setStats">📊 Estadísticas de consumo</button>
       <button class="btn" type="button" id="exportCsv">⬇︎ Descargar copia de la despensa (Excel/CSV)</button>
       <button class="btn" type="button" id="logout">Cerrar sesión en este móvil</button>
     </div>
     <p class="note" id="installNote">Para usarla como app: en Chrome, menú ⋮ → <b>Instalar app</b> o <b>Añadir a pantalla de inicio</b>. En iPhone, Compartir → <b>Añadir a inicio</b>.</p>
-    <p class="note mono" style="font-size:.75rem">Despensa · v4</p>
+    <p class="note mono" style="font-size:.75rem">Despensa · v5</p>
     <div class="actions"><button class="btn" type="button" data-close>Cerrar</button></div>
+  </div>
+</div>
+
+<div class="sheet" id="alertSheet" role="dialog" aria-modal="true" aria-labelledby="alertTitle" hidden>
+  <div class="in">
+    <div class="grab"></div>
+    <h2 id="alertTitle">Ojo con esto</h2>
+    <p class="note" id="alertSub"></p>
+    <ul class="alertlist" id="alertList"></ul>
+    <div class="actions"><button class="btn" type="button" data-close>Entendido</button><button class="btn primary" type="button" id="alertGo">Ver caducidades</button></div>
   </div>
 </div>
 
@@ -620,7 +699,7 @@ const CASA_EMAIL = "casa@despensa.casa";
 "use strict";
 const CATS=["Lácteos y huevos","Carne y pescado","Fruta y verdura","Pasta, arroz y legumbres","Conservas","Panadería y desayuno","Congelados","Salsas y especias","Bebidas","Snacks y dulces","Limpieza e higiene","Otros"];
 const $=s=>document.querySelector(s);
-const state={items:new Map(),buy:new Map(),cat:"Todas",mode:"in"};
+const state={items:new Map(),buy:new Map(),ev:new Map(),cat:"Todas",loc:"todo",mode:"in"};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
@@ -658,6 +737,13 @@ function whenText(f){const d=daysTo(f);if(d<0)return d===-1?"caducó ayer":`cadu
 function whenClass(f){const d=daysTo(f);return d<0?"past":d===0?"d0":d===1?"d1":d<=3?"d3":d<=7?"d7":""}
 
 /* ---------- lotes ---------- */
+const LOCS={despensa:"Despensa",nevera:"Nevera",congelador:"Congelador"};
+function defLoc(cat){return /Lácteos|Carne|Fruta/.test(cat||"")?"nevera":cat==="Congelados"?"congelador":"despensa"}
+const locOf=it=>LOCS[it.ubic]?it.ubic:defLoc(it.categoria);
+const OPEN_DAYS={"Lácteos y huevos":4,"Carne y pescado":2,"Fruta y verdura":4,"Pasta, arroz y legumbres":30,"Conservas":3,"Panadería y desayuno":7,"Congelados":2,"Salsas y especias":30,"Bebidas":4,"Snacks y dulces":10,"Limpieza e higiene":180,"Otros":7};
+function openExp(it){if(!it.abierto||!it.abierto.fecha||qty(it)<=0)return"";const d=new Date(it.abierto.fecha+"T00:00:00");d.setDate(d.getDate()+(+it.abierto.dias||0));return isoDay(d)}
+const parsePrice=v=>{v=String(v||"").replace(",",".").replace(/[^\d.]/g,"");const n=parseFloat(v);return isFinite(n)&&n>=0?Math.round(n*100)/100:null};
+const eur=n=>(n||0).toLocaleString("es-ES",{style:"currency",currency:"EUR"});
 function lotsOf(it){
   if(Array.isArray(it.lotes))return it.lotes.map(l=>({f:l.f||"",n:Math.max(0,parseInt(l.n,10)||0)})).filter(l=>l.n>0);
   const q=it.cantidad||0;return q>0?[{f:"",n:q}]:[];
@@ -691,9 +777,10 @@ $("#logout").onclick=()=>auth.signOut();
 function start(){
   if(unsub)return;
   unsub=fs.collection("productos").onSnapshot({includeMetadataChanges:true},snap=>{
-    const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.items=m;render();
+    const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.items=m;render();maybeAlert(snap.metadata.fromCache);
     setSync(snap.metadata.fromCache?"":"on",snap.metadata.fromCache?"Sin conexión · se sincroniza luego":"Al día");
   },()=>setSync("off","Sin permiso. Vuelve a entrar."));
+  fs.collection("movimientos").where("t",">=",Date.now()-120*86400000).onSnapshot(snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.ev=m;if(!$("#view-stats").hidden)renderStats()},()=>{});
   fs.collection("compra").onSnapshot(snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.buy=m;render()},()=>{});
 }
 const buyRef=id=>fs.collection("compra").doc(id);
@@ -708,20 +795,37 @@ function saveItem(id,data){
   return fs.collection("productos").doc(id).set(body).catch(e=>toast(/exceeds|too large|size/i.test(e.message)?"La foto es demasiado grande. Prueba con otra.":"No se ha guardado: "+e.message));
 }
 function deleteItem(id){state.items.delete(id);render();return fs.collection("productos").doc(id).delete().catch(e=>toast("No se ha borrado: "+e.message))}
-function addUnits(id,n,f,keepBuy){
+function logEv(tipo,id,it,n,precio){
+  const evId="e"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const p=precio!=null?precio:(it.precio!=null?it.precio:null);
+  const data={t:Date.now(),tipo,pid:id,nombre:it.nombre||"",cat:it.categoria||"Otros",n,precio:p};
+  state.ev.set(evId,data);
+  fs.collection("movimientos").doc(evId).set(data).catch(()=>{});
+  return evId;
+}
+function delEv(evId){if(!evId)return;state.ev.delete(evId);fs.collection("movimientos").doc(evId).delete().catch(()=>{})}
+function addUnits(id,n,f,keepBuy,extra){
   const it=state.items.get(id);if(!it)return null;
   if(!keepBuy&&state.buy.has("p-"+id))delBuy("p-"+id);
   const lots=lotsOf(it);lots.push({f:f||"",n});
-  saveItem(id,Object.assign({},it,{lotes:lots}));
-  return {nombre:it.nombre,after:total(tidy(lots))};
+  const next=Object.assign({},it,{lotes:lots},extra||{});
+  saveItem(id,next);
+  const ev=logEv("entrada",id,next,n);
+  return {nombre:it.nombre,after:total(tidy(lots)),ev,prevAbierto:it.abierto||null,prev:it};
 }
-function removeUnits(id,n){
+function removeUnits(id,n,tipo,onlyF){
   const it=state.items.get(id);if(!it)return null;
   const lots=tidy(lotsOf(it));let left=n;const used=[];
-  for(const l of lots){if(!left)break;const k=Math.min(l.n,left);l.n-=k;left-=k;if(k)used.push(l.f)}
+  for(const l of lots){if(!left)break;if(onlyF!==undefined&&l.f!==onlyF)continue;const k=Math.min(l.n,left);l.n-=k;left-=k;if(k)used.push(l.f)}
   if(left===n)return {nombre:it.nombre,after:0,none:true};
-  saveItem(id,Object.assign({},it,{lotes:lots}));
-  return {nombre:it.nombre,after:total(lots),from:used[0]||""};
+  const next=Object.assign({},it,{lotes:lots});if(it.abierto)next.abierto=null;
+  saveItem(id,next);
+  const ev=logEv(tipo||"gasto",id,it,n-left);
+  return {nombre:it.nombre,after:total(lots),from:used[0]||"",ev,prevAbierto:it.abierto||null,prev:it};
+}
+function restore(id,before,r){
+  const cur=state.items.get(id);if(cur){const x=Object.assign({},cur,{lotes:before});if(r&&r.prev){x.abierto=r.prev.abierto||null;if("precio" in r.prev)x.precio=r.prev.precio;if(r.prev.ubic)x.ubic=r.prev.ubic}saveItem(id,x)}
+  if(r&&r.ev)delEv(r.ev);
 }
 
 /* ---------- fotos ---------- */
@@ -789,7 +893,7 @@ function render(){
   renderExp(all);renderChips(all);renderShelves(all);renderMiss(all,miss);
 }
 let cadFilter="7";
-function expRows(all){const rows=[];for(const i of all)for(const l of lotsOf(i))if(l.f)rows.push({id:i.id,it:i,nombre:i.nombre,n:l.n,f:l.f});rows.sort((a,b)=>a.f.localeCompare(b.f));return rows}
+function expRows(all){const rows=[];for(const i of all){for(const l of lotsOf(i))if(l.f)rows.push({id:i.id,it:i,nombre:i.nombre,n:l.n,f:l.f});const o=openExp(i);if(o)rows.push({id:i.id,it:i,nombre:i.nombre+" (abierto)",n:1,f:o,open:true})}rows.sort((a,b)=>a.f.localeCompare(b.f));return rows}
 function badge(f){const c=whenClass(f)||"later";return `<span class="badge-when ${c}">${esc(daysTo(f)<0?"Caducado":whenText(f))}</span>`}
 function renderExp(all){
   const rows=expRows(all);const soon=rows.filter(r=>daysTo(r.f)<=7);
@@ -803,7 +907,7 @@ function renderExp(all){
   const el=$("#cadList");
   if(!rows.length){el.innerHTML=`<div class="empty"><h3>Sin fechas todavía</h3><p>Cuando escanees algo, elige cuándo caduca o escribe la fecha del envase. Aquí verás lo que vence primero.</p></div>`;return}
   if(!list.length){el.innerHTML=`<div class="empty"><h3>Nada en este periodo</h3><p>No hay productos que caduquen en estas fechas.</p></div>`;return}
-  el.innerHTML=groups.map(([t,fn])=>{const g=list.filter(fn);if(!g.length)return"";return `<div class="cadgroup"><h3><span>${t}</span><span>${g.reduce((a,r)=>a+r.n,0)} ud</span></h3>${g.map(r=>`<div class="cadrow">${picHtml(r.it,"thumb")}<button class="info" type="button" data-edit="${esc(r.id)}"><div class="name">${esc(r.nombre)}</div><div class="meta">${badge(r.f)}<span>${r.n} ud · ${esc(toDMY(r.f))}</span></div></button><button class="use" type="button" data-use="${esc(r.id)}" data-uf="${esc(r.f)}">Gastar 1</button></div>`).join("")}</div>`}).join("");
+  el.innerHTML=groups.map(([t,fn])=>{const g=list.filter(fn);if(!g.length)return"";return `<div class="cadgroup"><h3><span>${t}</span><span>${g.reduce((a,r)=>a+r.n,0)} ud</span></h3>${g.map(r=>`<div class="cadrow">${picHtml(r.it,"thumb")}<button class="info" type="button" data-edit="${esc(r.id)}"><div class="name">${esc(r.nombre)}</div><div class="meta">${badge(r.f)}<span>${r.n} ud · ${esc(toDMY(r.f))}</span></div></button><div class="acts2"><button class="use" type="button" data-use="${esc(r.id)}" data-uf="${r.open?"*":esc(r.f)}">Gastar 1</button>${daysTo(r.f)<=1?`<button class="throw" type="button" data-throw="${esc(r.id)}" data-uf="${r.open?"*":esc(r.f)}">Tirar</button>`:""}</div></div>`).join("")}</div>`}).join("");
 }
 $("#cadFilter").addEventListener("click",e=>{const b=e.target.closest("[data-cf]");if(!b)return;cadFilter=b.dataset.cf;document.querySelectorAll("#cadFilter [data-cf]").forEach(x=>x.setAttribute("aria-pressed",x===b));render()});
 const CAT_COLORS={"Lácteos y huevos":"#4f8fc0","Carne y pescado":"#c0504f","Fruta y verdura":"#5a9a3c","Pasta, arroz y legumbres":"#c89a3c","Conservas":"#8a6cb0","Panadería y desayuno":"#b07a46","Congelados":"#46a6b0","Salsas y especias":"#d0702c","Bebidas":"#3c7ab0","Snacks y dulces":"#c04f8a","Limpieza e higiene":"#6c8a9a","Otros":"#7a8a70"};
@@ -819,17 +923,20 @@ function expPill(it){
   const d=daysTo(f);const cls=d<0?"out":d<=7?"soon":"later";
   return `<span class="pill ${cls}">${esc(d<0?"Caducado":whenText(f))}</span>`;
 }
+function openPill(i){const o=openExp(i);if(!o)return"";const d=daysTo(o);return `<span class="pill ${d<=0?"out":"open"}">${d<0?"Abierto · pasado":d===0?"Abierto · gastar hoy":`Abierto · ${d} d`}</span>`}
 function itemRow(i,extra){
   const st=status(i),q=qty(i);
   const pill=st==="out"?'<span class="pill out">Agotado</span>':st==="low"?'<span class="pill low">Bajo</span>':"";
   return `<li class="item${q===0?" zero":""}">${picHtml(i,"thumb")}
     <button class="info" type="button" data-edit="${esc(i.id)}"><div class="name">${esc(i.nombre)}</div>
-      <div class="meta">${pill}${expPill(i)}${i.marca?`<span>${esc(i.marca)}</span>`:""}${extra||""}${i.minimo?`<span class="mono">mín ${i.minimo}</span>`:""}</div></button>
+      <div class="meta">${pill}${openPill(i)}${expPill(i)}${state.loc==="todo"?`<span class="loc-tag">${LOCS[locOf(i)]}</span>`:""}${i.marca?`<span>${esc(i.marca)}</span>`:""}${extra||""}${i.minimo?`<span class="mono">mín ${i.minimo}</span>`:""}</div></button>
     <div class="stepper"><button type="button" data-dec="${esc(i.id)}" aria-label="Quitar uno de ${esc(i.nombre)}">−</button><output class="mono">${q}</output><button type="button" data-inc="${esc(i.id)}" aria-label="Añadir uno de ${esc(i.nombre)}">+</button></div></li>`;
 }
 function renderShelves(all){
   const q=norm($("#q").value),showZero=$("#showZero").checked,el=$("#shelves");
-  let list=all.filter(i=>state.cat==="Todas"||(i.categoria||"Otros")===state.cat);
+  const cnt={todo:0,despensa:0,nevera:0,congelador:0};for(const i of all){const q=qty(i);cnt.todo+=q;cnt[locOf(i)]+=q}
+  $("#locFilter").innerHTML=[["todo","Todo"],["despensa","Despensa"],["nevera","Nevera"],["congelador","Congelador"]].map(([k,t])=>`<button type="button" data-loc="${k}" aria-pressed="${state.loc===k}">${t}<span>${cnt[k]} ud</span></button>`).join("");
+  let list=all.filter(i=>(state.cat==="Todas"||(i.categoria||"Otros")===state.cat)&&(state.loc==="todo"||locOf(i)===state.loc));
   if(q)list=list.filter(i=>norm(i.nombre+" "+(i.marca||"")+" "+(i.codigo||"")).includes(q));
   else if(!showZero)list=list.filter(i=>qty(i)>0);
   if(!all.length){el.innerHTML=`<div class="empty"><h3>La despensa está vacía</h3><p>Pulsa el botón verde de abajo y apunta la cámara a los códigos de barras de lo que vas guardando. Cada producto se reconoce y se suma solo.</p></div>`;return}
@@ -848,9 +955,12 @@ function buyEntries(all,miss){
       out.push({key:k,pid,it:Object.assign({id:pid},it),nombre:it.nombre,n:d.n||1,done:!!d.tachado,auto:false,why:`hay ${qty(it)} en casa`})}
     else out.push({key:k,pid:null,it:null,nombre:d.texto,n:d.n||1,done:!!d.tachado,auto:false,why:"no está en la despensa"});
   }
-  out.sort((a,b)=>(a.it?.categoria||"zz").localeCompare(b.it?.categoria||"zz")||norm(a.nombre).localeCompare(norm(b.nombre)));
+  for(const e of out)e.cat=e.it?(e.it.categoria||"Otros"):guessCat([],e.nombre);
+  out.sort((a,b)=>AISLES.indexOf(a.cat)-AISLES.indexOf(b.cat)||norm(a.nombre).localeCompare(norm(b.nombre)));
   return out;
 }
+const AISLES=["Fruta y verdura","Panadería y desayuno","Carne y pescado","Lácteos y huevos","Congelados","Pasta, arroz y legumbres","Conservas","Salsas y especias","Snacks y dulces","Bebidas","Limpieza e higiene","Otros"];
+function byAisle(list){let last="",h="";for(const e of list){if(e.cat!==last){h+=`<li class="aisle">${esc(e.cat)}</li>`;last=e.cat}h+=buyRow(e)}return h}
 function buyRow(e){
   const pic=e.it?picHtml(e.it,"thumb"):`<span class="ph">${esc((e.nombre||"?").charAt(0).toUpperCase())}</span>`;
   return `<li class="brow${e.done?" done":""}"><button class="tick" type="button" data-tick="${esc(e.key)}" aria-label="${e.done?"Sacar del carro":"Meter en el carro"}: ${esc(e.nombre)}" aria-pressed="${e.done}">✓</button>${pic}
@@ -863,7 +973,7 @@ function renderMiss(all,miss){
   const entries=buyEntries(all,miss);lastBuy=entries;
   const todo=entries.filter(e=>!e.done),done=entries.filter(e=>e.done);
   $("#buyCount").textContent=todo.length?todo.length+(todo.length===1?" cosa":" cosas"):"";
-  $("#buyList").innerHTML=todo.length?todo.map(buyRow).join(""):`<li class="empty" style="list-style:none"><h3>${done.length?"Ya está todo en el carro":"No falta nada"}</h3><p>${done.length?"Cuando llegues a casa, pulsa «Guardar en la despensa».":"Escribe arriba lo que quieras comprar, o ponle un stock mínimo a lo que siempre quieres tener y aparecerá aquí cuando baje."}</p></li>`;
+  $("#buyList").innerHTML=todo.length?byAisle(todo):`<li class="empty" style="list-style:none"><h3>${done.length?"Ya está todo en el carro":"No falta nada"}</h3><p>${done.length?"Cuando llegues a casa, pulsa «Guardar en la despensa».":"Escribe arriba lo que quieras comprar, o ponle un stock mínimo a lo que siempre quieres tener y aparecerá aquí cuando baje."}</p></li>`;
   $("#cartWrap").hidden=!done.length;$("#cartList").innerHTML=done.map(buyRow).join("");
   const nCart=done.reduce((a,e)=>a+e.n,0);
   $("#cartBar").hidden=!done.length||$("#view-falta").hidden;
@@ -878,22 +988,24 @@ function renderMiss(all,miss){
 
 
 /* ---------- navegación ---------- */
-function setView(v){for(const s of ["despensa","falta","recetas","caducan"])$("#view-"+s).hidden=s!==v;$("#cartBar").hidden=v!=="falta"||!lastBuy.some(e=>e.done);
+function setView(v){for(const s of ["despensa","falta","recetas","caducan","stats"])$("#view-"+s).hidden=s!==v;$("#cartBar").hidden=v!=="falta"||!lastBuy.some(e=>e.done);
   document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-current",t.dataset.view===v?"page":"false"));window.scrollTo(0,0)}
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>setView(t.dataset.view)));
 $("#q").addEventListener("input",render);$("#showZero").addEventListener("change",render);
+$("#locFilter").addEventListener("click",e=>{const b=e.target.closest("[data-loc]");if(b){state.loc=b.dataset.loc;lsSet("despensa.loc",state.loc);render()}});
+state.loc=lsGet("despensa.loc","todo");
 $("#catChips").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(b){state.cat=b.dataset.cat;render()}});
 $("#app").addEventListener("click",e=>{
   const go=e.target.closest("[data-go]");
-  if(go){const g=go.dataset.go;if(g==="list"){setView("despensa");setTimeout(()=>$("#listHead").scrollIntoView({behavior:"smooth",block:"start"}),30)}else setView(g);return}
-  const use=e.target.closest("[data-use]");
-  if(use){const id=use.dataset.use,f=use.dataset.uf;const it=state.items.get(id);if(!it)return;const before=lotsOf(it);
-    const lots=tidy(before);const l=lots.find(x=>x.f===f);if(l)l.n--;saveItem(id,Object.assign({},it,{lotes:lots}));
-    toast(`−1 ${it.nombre}`,"Deshacer",()=>{const cur=state.items.get(id);if(cur)saveItem(id,Object.assign({},cur,{lotes:before}))});return}
+  if(go){const g=go.dataset.go;if(g==="stats"){setView("stats");renderStats();return}if(g==="list"){setView("despensa");setTimeout(()=>$("#listHead").scrollIntoView({behavior:"smooth",block:"start"}),30)}else setView(g);return}
+  const use=e.target.closest("[data-use],[data-throw]");
+  if(use){const id=use.dataset.use||use.dataset.throw,f=use.dataset.uf,tipo=use.dataset.throw?"tirado":"gasto";const it=state.items.get(id);if(!it)return;const before=lotsOf(it);
+    const r=removeUnits(id,1,tipo,f==="*"?undefined:f);if(!r||r.none)return;
+    toast(`${tipo==="tirado"?"Tirado":"−1"} ${it.nombre}`,"Deshacer",()=>restore(id,before,r));return}
   const inc=e.target.closest("[data-inc]"),dec=e.target.closest("[data-dec]"),ed=e.target.closest("[data-edit]");
   if(inc){addUnits(inc.dataset.inc,1,"")}
   else if(dec){const id=dec.dataset.dec,it=state.items.get(id);const before=it?lotsOf(it):[];const r=removeUnits(id,1);
-    if(r&&!r.none)toast(`−1 ${r.nombre}${r.from?" (la de "+fmtDay(r.from)+")":""}`,"Deshacer",()=>{const cur=state.items.get(id);if(cur)saveItem(id,Object.assign({},cur,{lotes:before}))})}
+    if(r&&!r.none)toast(`−1 ${r.nombre}${r.from?" (la de "+fmtDay(r.from)+")":""}`,"Deshacer",()=>restore(id,before,r))}
   else if(ed)openProduct({id:ed.dataset.edit});
 });
 
@@ -903,6 +1015,7 @@ function openSheet(el){sheetEl=el;$("#scrim").hidden=false;el.hidden=false}
 function closeSheet(){if(sheetEl)sheetEl.hidden=true;sheetEl=null;$("#scrim").hidden=true;const f=onSheetClose;onSheetClose=null;f&&f()}
 $("#scrim").addEventListener("click",closeSheet);
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",closeSheet));
+document.addEventListener("change",e=>{if(e.target.id==="pCat"&&!form.editing){$("#pLoc").value=defLoc(e.target.value);if(!form.abierto)renderOpen(e.target.value)}});
 function fillCats(sel){$("#pCat").innerHTML=CATS.map(c=>`<option${c===sel?" selected":""}>${esc(c)}</option>`).join("")}
 function renderPhoto(){
   const box=$("#pPhoto");box.innerHTML=form.img?`<img src="${esc(form.img)}" alt="Foto del producto" referrerpolicy="no-referrer">`:"Sin foto";
@@ -941,22 +1054,56 @@ function openProduct({id,code,hint,after,preset}){
   $("#pName").value=src.nombre||"";$("#pBrand").value=src.marca||"";fillCats(src.categoria||"Otros");
   $("#pMin").value=src.minimo||0;$("#pCodeEdit").value=src.codigo||code||"";
   form.img=src.imagen||"";
+  $("#pLoc").value=LOCS[src.ubic]?src.ubic:defLoc(src.categoria);$("#pPrice").value=src.precio!=null?String(src.precio).replace(".",","):"";
+  form.abierto=it&&it.abierto?Object.assign({},it.abierto):null;renderOpen(src.categoria);
+  const sg=it?suggestMin(id):null;const sgEl=$("#pSugg");sgEl.hidden=!sg||sg.min===(it.minimo||0);
+  if(sg)sgEl.innerHTML=`Sugerido: ${sg.min} (gastas unas ${sg.week} por semana) <button type="button" id="pSuggUse">Usar</button>`;
+  const exp=it?lotsOf(it).filter(l=>l.f&&daysTo(l.f)<0).reduce((a,l)=>a+l.n,0):0;$("#pThrow").hidden=!exp;$("#pThrow").textContent=`Tirar los caducados (${exp})`;
   form.lots=it?tidy(lotsOf(it)).map(l=>({f:l.f,n:l.n})):(preset&&preset.lotes?preset.lotes.map(l=>({f:l.f,n:l.n})):[{f:"",n:1}]);
   renderPhoto();renderLots();
   $("#delBtn").hidden=!it;$("#delConfirm").hidden=true;$("#prodErr").hidden=true;
   openSheet($("#prodSheet"));if(!it)setTimeout(()=>$("#pName").focus(),60);
 }
 $("#addManual").onclick=()=>openProduct({});
+function suggestMin(id){
+  const since=Date.now()-56*86400000;let n=0,first=Date.now();
+  for(const e of state.ev.values())if(e.pid===id&&e.tipo==="gasto"&&e.t>=since){n+=e.n;first=Math.min(first,e.t)}
+  if(n<2)return null;const weeks=Math.max(1,(Date.now()-first)/604800000);const w=n/weeks;
+  return {min:Math.max(1,Math.ceil(w)),week:w<1?"menos de 1":(Math.round(w*10)/10).toLocaleString("es-ES")};
+}
+$("#pSugg").addEventListener("click",e=>{if(e.target.id==="pSuggUse"){const m=e.target.parentNode.textContent.match(/Sugerido: (\d+)/);if(m){$("#pMin").value=m[1];$("#pSugg").hidden=true}}});
+function renderOpen(cat){
+  const box=$("#pOpen");const a=form.abierto;
+  if(a&&a.fecha){const d=new Date(a.fecha+"T00:00:00");d.setDate(d.getDate()+(+a.dias||0));const left=daysTo(isoDay(d));
+    box.innerHTML=`<div class="row"><b>Abierto el ${esc(fmtDay(a.fecha))}</b><span class="note">${left<0?"ya debería haberse gastado":left===0?"gastar hoy":left===1?"queda 1 día":`quedan ${left} días`}</span></div>
+    <div class="row"><span class="note">Aguanta abierto</span><input id="pOpenDays" inputmode="numeric" value="${+a.dias||0}" aria-label="Días que aguanta abierto"><span class="note">días</span><button type="button" class="iconbtn" id="pOpenClear">Ya no hay ninguno abierto</button></div>`;
+  }else{
+    const def=OPEN_DAYS[cat||$("#pCat").value]||7;
+    box.innerHTML=`<div class="row"><button type="button" class="btn" id="pOpenNow">Abrí uno hoy</button><span class="note">y aguanta</span><input id="pOpenDays" inputmode="numeric" value="${def}" aria-label="Días que aguanta abierto"><span class="note">días</span></div>`;
+  }
+}
+$("#pOpen").addEventListener("click",e=>{
+  if(e.target.id==="pOpenNow"){form.abierto={fecha:isoDay(today()),dias:Math.max(0,parseInt($("#pOpenDays").value,10)||0)};renderOpen()}
+  else if(e.target.id==="pOpenClear"){form.abierto=null;renderOpen()}
+});
+$("#pOpen").addEventListener("input",e=>{if(e.target.id==="pOpenDays"&&form.abierto)form.abierto.dias=Math.max(0,parseInt(e.target.value,10)||0)});
+$("#pThrow").onclick=()=>{const id=form.editing;const it=state.items.get(id);if(!it)return;
+  let n=0;for(const l of tidy(lotsOf(it)))if(l.f&&daysTo(l.f)<0)n+=l.n;
+  const kept=tidy(lotsOf(it)).filter(l=>!(l.f&&daysTo(l.f)<0));
+  saveItem(id,Object.assign({},it,{lotes:kept}));logEv("tirado",id,it,n);
+  form.lots=kept.map(l=>({f:l.f,n:l.n}));renderLots();$("#pThrow").hidden=true;toast(`${n} ${it.nombre} tirados`)};
 $("#prodForm").addEventListener("submit",e=>{
   e.preventDefault();const err=$("#prodErr");
   const nombre=$("#pName").value.trim();if(!nombre){err.hidden=false;err.textContent="Ponle un nombre al producto.";return}
   if([...document.querySelectorAll("#pLots [data-lf]")].some(t=>parseDMY(t.value)===null)){err.hidden=false;err.textContent="Hay una fecha mal escrita. Usa día/mes/año, por ejemplo 25/11/2026, o déjala vacía.";return}
   const codigo=cleanCode($("#pCodeEdit").value);const id=form.editing;const old=id?state.items.get(id):null;
   if(codigo){const d=findByCode(codigo);if(d&&d!==id){err.hidden=false;err.textContent=`Ese código ya es de «${state.items.get(d).nombre}».`;return}}
-  const data={nombre,marca:$("#pBrand").value.trim(),categoria:$("#pCat").value,lotes:form.lots,minimo:Math.max(0,parseInt($("#pMin").value,10)||0),codigo,imagen:form.img||"",creado:old?.creado||Date.now()};
+  const data={nombre,marca:$("#pBrand").value.trim(),categoria:$("#pCat").value,lotes:form.lots,minimo:Math.max(0,parseInt($("#pMin").value,10)||0),codigo,imagen:form.img||"",creado:old?.creado||Date.now(),
+    ubic:$("#pLoc").value,precio:parsePrice($("#pPrice").value),abierto:form.abierto&&qty({lotes:form.lots})>0?form.abierto:null};
   const wantId=codigo?idFor(codigo):(id&&id.startsWith("m-")?id:idFor(""));
   if(id&&id!==wantId)deleteItem(id);
   saveItem(wantId,data);form.saved=wantId;
+  if(!old){const n0=total(tidy(lotsOf(data)));if(n0)logEv("entrada",wantId,data,n0)}
   const n=total(tidy(form.lots));
   closeSheet();toast(old?`${nombre} guardado`:`${nombre} añadido (${n})`);
 });
@@ -971,7 +1118,27 @@ function toast(msg,actLabel,act){const t=$("#toast");$("#toastMsg").textContent=
 /* ---------- escáner ---------- */
 let stream=null,running=false,paused=false,lastCode="",lastAt=0,audio=null,detector=null,track=null;
 const askEl=$("#askToggle");askEl.checked=lsGet("despensa.ask",true);askEl.onchange=()=>lsSet("despensa.ask",askEl.checked);
-function setMode(m){state.mode=m;$("#modeIn").setAttribute("aria-pressed",m==="in");$("#modeOut").setAttribute("aria-pressed",m==="out");if(m==="out")hideQuick()}
+function setMode(m){state.mode=m;$("#modeIn").setAttribute("aria-pressed",m==="in");$("#modeOut").setAttribute("aria-pressed",m==="out");$("#modeAsk").setAttribute("aria-pressed",m==="ask");hideQuick();resume();
+  $("#hint").textContent=m==="ask"?"Apunta a un código para ver si te queda en casa.":"Apunta al código de barras."}
+$("#modeAsk").onclick=()=>setMode("ask");
+let cPending=null;
+function showConsult(code,id,off){
+  paused=true;const it=id?Object.assign({id},state.items.get(id)):(off||{nombre:"Producto desconocido"});
+  $("#cImg").innerHTML=it.imagen?`<img class="${isOwn(it.imagen)?"own":""}" src="${esc(it.imagen)}" alt="" referrerpolicy="no-referrer">`:esc((it.nombre||"?").charAt(0).toUpperCase());
+  $("#cName").textContent=it.nombre;$("#cSub").textContent=id?`${LOCS[locOf(it)]}${it.precio!=null?" · "+eur(it.precio)+"/ud":""}`:(off?"No lo tienes dado de alta":"Código "+code);
+  const q=id?qty(it):0;const big=$("#cBig");big.textContent=q?`Tienes ${q} en casa`:"No te queda";big.classList.toggle("none",!q);
+  const info=[];
+  if(id){for(const l of tidy(lotsOf(it)))info.push(`${l.n} ud · ${l.f?whenText(l.f):"sin fecha"}`);
+    const o=openExp(it);if(o)info.push(`1 abierta · ${daysTo(o)<0?"pasada":daysTo(o)===0?"gastar hoy":daysTo(o)===1?"queda 1 día":"quedan "+daysTo(o)+" días"}`);
+    if(it.minimo)info.push(`Mínimo: ${it.minimo}${missing(it)?" · ¡te falta!":""}`)}
+  const inList=id?state.buy.has("p-"+id)&&!state.buy.get("p-"+id).oculto||(missing(it)):false;
+  if(inList)info.push("Ya está en tu lista de la compra");
+  $("#cInfo").innerHTML=info.map(t=>`<li>${esc(t)}</li>`).join("");
+  $("#cBuy").hidden=!!inList||(!id&&!off);cPending={id,nombre:it.nombre};
+  $("#consult").hidden=false;$("#scanFoot").hidden=true;$("#quick").hidden=true;
+}
+$("#cNext").onclick=()=>{hideQuick();resume()};
+$("#cBuy").onclick=()=>{if(!cPending)return;if(cPending.id)setBuy("p-"+cPending.id,{n:1,tachado:false});else setBuy("t-"+Date.now().toString(36),{texto:cPending.nombre,n:1,tachado:false});toast(`${cPending.nombre} añadido a la lista`);hideQuick();resume()};
 $("#modeIn").onclick=()=>setMode("in");$("#modeOut").onclick=()=>setMode("out");
 $("#openScan").onclick=openScanner;$("#closeScan").onclick=closeScanner;
 
@@ -1068,10 +1235,13 @@ function showQuick(p){
   const it=p.data;
   $("#qImg").innerHTML=it.imagen?`<img class="${isOwn(it.imagen)?"own":""}" src="${esc(it.imagen)}" alt="" referrerpolicy="no-referrer">`:esc((it.nombre||"?").charAt(0).toUpperCase());
   $("#qName").textContent=it.nombre;
+  qState.loc=locOf(it);$("#qPrice").value=it.precio!=null?String(it.precio).replace(".",","):"";qLocs();
   $("#qSub").textContent=p.isNew?"Producto nuevo · reconocido en Open Food Facts":`Hay ${qty(it)} en casa${nextExp(it)?" · la primera "+whenText(nextExp(it)).replace(/^cad\. /,"caduca el "):""}`;
   $("#quick").hidden=false;$("#scanFoot").hidden=true;qRender();
 }
-function hideQuick(){pending=null;$("#quick").hidden=true;$("#scanFoot").hidden=false}
+function hideQuick(){pending=null;$("#quick").hidden=true;$("#consult").hidden=true;$("#scanFoot").hidden=false}
+function qLocs(){document.querySelectorAll("#qLocs [data-l]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.l===qState.loc))}
+$("#qLocs").addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(b){qState.loc=b.dataset.l;qLocs()}});
 $("#qPlus").onclick=()=>{qState.n=Math.min(99,qState.n+1);qRender()};
 $("#qMinus").onclick=()=>{qState.n=Math.max(1,qState.n-1);qRender()};
 $("#qPacks").addEventListener("click",e=>{const b=e.target.closest("[data-n]");if(b){qState.n=+b.dataset.n;qRender()}});
@@ -1081,24 +1251,26 @@ $("#qCancel").onclick=()=>{hideQuick();resume()};
 $("#qOk").onclick=()=>{
   if(!pending)return;
   if(parseDMY($("#qDate").value)===null){$("#qDate").classList.add("bad");toast("Fecha mal escrita: usa día/mes/año");return}const {id,isNew,data}=pending;const n=qState.n,f=qState.f;
-  if(isNew){saveItem(id,Object.assign({},data,{lotes:[{f,n}]}));logLine("new","+"+n,`Nuevo: ${data.nombre}${f?" · "+fmtDay(f):""}`,id)}
-  else{const before=lotsOf(state.items.get(id));const r=addUnits(id,n,f);logLine("in","+"+n,`${r.nombre} · hay ${r.after}${f?" · "+fmtDay(f):""}`,id,()=>{const cur=state.items.get(id);if(cur)saveItem(id,Object.assign({},cur,{lotes:before}))})}
+  const price=parsePrice($("#qPrice").value);const extra={ubic:qState.loc};if(price!=null)extra.precio=price;
+  if(isNew){const nd=Object.assign({},data,{lotes:[{f,n}]},extra);saveItem(id,nd);logEv("entrada",id,nd,n);logLine("new","+"+n,`Nuevo: ${data.nombre}${f?" · "+fmtDay(f):""}`,id)}
+  else{const before=lotsOf(state.items.get(id));const r=addUnits(id,n,f,false,extra);logLine("in","+"+n,`${r.nombre} · hay ${r.after}${f?" · "+fmtDay(f):""}`,id,()=>restore(id,before,r))}
   beep(true);hideQuick();resume();
 };
 
 async function onDetected(code){
   flash();try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}
   const hit=findByCode(code);
+  if(state.mode==="ask"){beep(true);if(hit){showConsult(code,hit);return}paused=true;$("#hint").textContent="Buscando el producto…";const off=await lookup(code);$("#hint").textContent="Apunta a un código para ver si te queda en casa.";showConsult(code,null,off);return}
   if(state.mode==="out"){
     if(!hit){beep(false);logLine("out","?",`${code} no está en la despensa`);return}
     const before=lotsOf(state.items.get(hit));const r=removeUnits(hit,1);
     if(r.none){beep(false);logLine("out","0",`${r.nombre} ya estaba a 0`,hit);return}
-    beep(true);logLine("out","−1",`${r.nombre}${r.from?" ("+fmtDay(r.from)+")":""} · quedan ${r.after}`,hit,()=>{const cur=state.items.get(hit);if(cur)saveItem(hit,Object.assign({},cur,{lotes:before}))});return;
+    beep(true);logLine("out","−1",`${r.nombre}${r.from?" ("+fmtDay(r.from)+")":""} · quedan ${r.after}`,hit,()=>restore(hit,before,r));return;
   }
   if(hit){
     const it=Object.assign({id:hit},state.items.get(hit));
     if(askEl.checked){beep(true);showQuick({id:hit,isNew:false,data:it});return}
-    const before=lotsOf(state.items.get(hit));const r=addUnits(hit,1,"");beep(true);logLine("in","+1",`${r.nombre} · hay ${r.after}`,hit,()=>{const cur=state.items.get(hit);if(cur)saveItem(hit,Object.assign({},cur,{lotes:before}))});return;
+    const before=lotsOf(state.items.get(hit));const r=addUnits(hit,1,"");beep(true);logLine("in","+1",`${r.nombre} · hay ${r.after}`,hit,()=>restore(hit,before,r));return;
   }
   paused=true;$("#hint").textContent="Buscando el producto…";
   const p=await lookup(code);$("#hint").textContent="Apunta al código de barras.";
@@ -1168,12 +1340,13 @@ $("#buyForm").addEventListener("submit",ev=>{
 $("#uncheckAll").onclick=()=>{for(const e of lastBuy.filter(e=>e.done)){e.done=false;setBuy(e.key,buyDoc(e))}};
 $("#cartSave").onclick=()=>{
   const done=lastBuy.filter(e=>e.done);if(!done.length)return;
-  const snapshot=done.map(e=>({key:e.key,doc:state.buy.get(e.key),pid:e.pid,before:e.pid?lotsOf(state.items.get(e.pid)||{}):null}));
-  let units=0;const loose=[];
-  for(const e of done){if(e.pid&&state.items.get(e.pid)){addUnits(e.pid,e.n,"",true);units+=e.n}else loose.push(e.nombre)}
+  const undo=[];let units=0;const loose=[];
+  for(const e of done){const doc=state.buy.get(e.key);
+    if(e.pid&&state.items.get(e.pid)){const before=lotsOf(state.items.get(e.pid));const r=addUnits(e.pid,e.n,"",true);units+=e.n;undo.push({key:e.key,doc,pid:e.pid,before,r})}
+    else{loose.push(e.nombre);undo.push({key:e.key,doc})}}
   for(const e of done)delBuy(e.key);
   toast(`${units} ud guardadas en la despensa${loose.length?` · ${loose.length} sin ficha (escanéalas para darlas de alta)`:""}`,"Deshacer",()=>{
-    for(const x of snapshot){if(x.doc)setBuy(x.key,x.doc);if(x.pid&&state.items.get(x.pid))saveItem(x.pid,Object.assign({},state.items.get(x.pid),{lotes:x.before}))}
+    for(const x of undo){if(x.doc)setBuy(x.key,x.doc);if(x.pid)restore(x.pid,x.before,x.r)}
   });
 };
 $("#copyList").onclick=()=>{
@@ -1205,14 +1378,67 @@ $("#recipeForm").addEventListener("submit",e=>{
   window.open(AIS[ai].url(txt),"_blank");
 });
 
+/* ---------- estadísticas ---------- */
+let statP="mes";
+$("#statPeriod").addEventListener("click",e=>{const b=e.target.closest("[data-sp]");if(!b)return;statP=b.dataset.sp;document.querySelectorAll("#statPeriod [data-sp]").forEach(x=>x.setAttribute("aria-pressed",x===b));renderStats()});
+function bars(rows,fmt,red){const max=Math.max(1,...rows.map(r=>r.v));return `<div class="bars">${rows.map(r=>`<div class="bar"><span class="lbl">${esc(r.k)}</span><span class="trk"><span class="fil${red?" red":""}" style="width:${Math.max(3,r.v/max*100)}%"></span></span><span class="val">${fmt(r.v)}</span></div>`).join("")}</div>`}
+function renderStats(){
+  const now=new Date();const since=statP==="mes"?new Date(now.getFullYear(),now.getMonth(),1).getTime():Date.now()-(+statP)*86400000;
+  const evs=[...state.ev.values()].filter(e=>e.t>=since);
+  const sum=(t,f)=>evs.filter(e=>e.tipo===t).reduce((a,e)=>a+f(e),0);
+  const val=e=>(e.precio||0)*e.n;
+  const inU=sum("entrada",e=>e.n),inE=sum("entrada",val),useU=sum("gasto",e=>e.n),useE=sum("gasto",val),thrU=sum("tirado",e=>e.n),thrE=sum("tirado",val);
+  const all=[...state.items.values()];const home=all.reduce((a,i)=>a+qty(i)*(i.precio||0),0);
+  const priced=all.filter(i=>i.precio!=null).length;const hasMoney=inE+useE+thrE+home>0;
+  const pct=useU+thrU?Math.round(thrU/(useU+thrU)*100):0;
+  const group=(t,key)=>{const m=new Map();for(const e of evs.filter(x=>x.tipo===t)){const k=key(e);const c=m.get(k)||{u:0,e:0};c.u+=e.n;c.e+=val(e);m.set(k,c)}return m};
+  const catM=group("gasto",e=>e.cat||"Otros");const useByCat=[...catM.entries()].map(([k,c])=>({k,v:hasMoney&&c.e?c.e:c.u})).sort((a,b)=>b.v-a.v).slice(0,8);
+  const topUse=[...group("gasto",e=>e.nombre).entries()].map(([k,c])=>({k,v:c.u})).sort((a,b)=>b.v-a.v).slice(0,5);
+  const topThrow=[...group("tirado",e=>e.nombre).entries()].map(([k,c])=>({k,v:c.u})).sort((a,b)=>b.v-a.v).slice(0,5);
+  const el=$("#statBody");
+  if(!evs.length){el.innerHTML=`<div class="kpis"><div class="kpi"><small>Valor en casa</small><b>${eur(home)}</b><span>${priced} productos con precio</span></div></div><div class="empty"><h3>Aún no hay movimientos</h3><p>A partir de ahora, cada vez que metas, gastes o tires algo se apunta aquí. En unos días verás qué consumes más y cuánto se tira.</p></div>`;return}
+  el.innerHTML=`<div class="kpis">
+    <div class="kpi"><small>Comprado</small><b>${inE?eur(inE):inU+" ud"}</b><span>${inU} unidades</span></div>
+    <div class="kpi"><small>Gastado</small><b>${useE?eur(useE):useU+" ud"}</b><span>${useU} unidades</span></div>
+    <div class="kpi red"><small>Tirado</small><b>${thrE?eur(thrE):thrU+" ud"}</b><span>${thrE?thrU+" ud · ":""}${pct}% de lo que sale</span></div>
+    <div class="kpi"><small>Valor en casa</small><b>${eur(home)}</b><span>${priced} de ${all.length} con precio</span></div></div>
+  ${useByCat.length?`<div class="sechead"><h2>Consumo por categoría</h2><span class="note">${hasMoney?"en €":"en unidades"}</span></div>${bars(useByCat,v=>hasMoney?eur(v):v+" ud")}`:""}
+  ${topUse.length?`<div class="sechead"><h2>Lo que más gastas</h2></div>${bars(topUse,v=>v+" ud")}`:""}
+  ${topThrow.length?`<div class="sechead"><h2>Lo que más se tira</h2></div>${bars(topThrow,v=>v+" ud",true)}`:`<p class="note" style="margin-top:18px">Nada tirado en este periodo. 👏</p>`}
+  ${!hasMoney?`<p class="note" style="margin-top:18px">Pon el precio por unidad al escanear o en la ficha de cada producto para ver todo esto en euros.</p>`:""}`;
+}
+$("#openStats").onclick=()=>{setView("stats");renderStats()};
+
+/* ---------- aviso al entrar ---------- */
+let alerted=false;
+function maybeAlert(fromCache){
+  if(alerted)return;if(fromCache&&!state.items.size)return;alerted=true;
+  const key=isoDay(today());if(lsGet("despensa.alerted","")===key)return;
+  const rows=[];
+  for(const [id,i] of state.items){
+    for(const l of lotsOf(i))if(l.f&&daysTo(l.f)<=1)rows.push({id,nombre:i.nombre,txt:`${l.n} ud · ${daysTo(l.f)<0?"caducado":whenText(l.f)}`,f:l.f});
+    const o=openExp(i);if(o&&daysTo(o)<=1)rows.push({id,nombre:i.nombre+" (abierto)",txt:daysTo(o)<0?"ya debería gastarse":daysTo(o)===0?"gastar hoy":"gastar mañana",f:o});
+  }
+  if(!rows.length)return;
+  rows.sort((a,b)=>a.f.localeCompare(b.f));
+  const past=rows.filter(r=>daysTo(r.f)<0).length;
+  $("#alertSub").textContent=`${rows.length} ${rows.length===1?"cosa":"cosas"} para hoy o mañana${past?` · ${past} ya caducada${past>1?"s":""}`:""}.`;
+  $("#alertList").innerHTML=rows.slice(0,12).map(r=>`<li><b>${esc(r.nombre)}</b><span class="when ${whenClass(r.f)}">${esc(r.txt)}</span></li>`).join("");
+  lsSet("despensa.alerted",key);
+  setTimeout(()=>openSheet($("#alertSheet")),400);
+}
+$("#alertGo").onclick=()=>{closeSheet();setView("caducan");cadFilter="7";render()};
+
 /* ---------- ajustes ---------- */
+$("#setStats").onclick=()=>{closeSheet();setView("stats");renderStats()};
 $("#openSettings").onclick=()=>openSheet($("#setSheet"));
 $("#logout").onclick=()=>{closeSheet();auth.signOut()};
 $("#exportCsv").onclick=()=>{
-  const rows=[["Producto","Marca","Categoría","Unidades","Caducidad","Stock mínimo","Código de barras"]];
+  const rows=[["Producto","Marca","Categoría","Dónde","Unidades","Caducidad","Precio/ud","Stock mínimo","Código de barras"]];
   for(const it of [...state.items.values()].sort((a,b)=>norm(a.nombre).localeCompare(norm(b.nombre)))){
-    const lots=tidy(lotsOf(it));if(!lots.length)rows.push([it.nombre,it.marca||"",it.categoria||"",0,"",it.minimo||0,it.codigo||""]);
-    for(const l of lots)rows.push([it.nombre,it.marca||"",it.categoria||"",l.n,l.f?toDMY(l.f):"",it.minimo||0,it.codigo||""]);
+    const pr=it.precio!=null?String(it.precio).replace(".",","):"";const lo=LOCS[locOf(it)];
+    const lots=tidy(lotsOf(it));if(!lots.length)rows.push([it.nombre,it.marca||"",it.categoria||"",lo,0,"",pr,it.minimo||0,it.codigo||""]);
+    for(const l of lots)rows.push([it.nombre,it.marca||"",it.categoria||"",lo,l.n,l.f?toDMY(l.f):"",pr,it.minimo||0,it.codigo||""]);
   }
   const csv="\ufeff"+rows.map(r=>r.map(v=>{v=String(v);return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(";")).join("\r\n");
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download=`despensa-${isoDay(new Date())}.csv`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
